@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>إعدادات الحساب - MyStore</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:'Arial',sans-serif;margin:0;background:#f5f5f5;color:#333;}
+header{background:#2c3e50;color:white;padding:1rem 2rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
+header h1{margin:0;font-size:1.5rem;}
+.container{max-width:500px;margin:2rem auto;padding:2rem;background:white;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.1);}
+.container h2{text-align:center;margin-bottom:1.5rem;}
+form label{display:block;margin:.5rem 0 .2rem;}
+form input{width:100%;padding:.6rem;border:1px solid #ccc;border-radius:8px;margin-bottom:1rem;font-size:1rem;}
+form input[type="file"]{padding:.3rem;}
+form button{width:100%;padding:.8rem;border:none;border-radius:10px;background:#27ae60;color:white;font-size:1rem;cursor:pointer;transition:.3s;}
+form button:hover{background:#1e8449;}
+.profile-preview{display:flex;justify-content:center;margin-bottom:1rem;}
+.profile-preview img{width:100px;height:100px;border-radius:50%;object-fit:cover;border:2px solid #2c3e50;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚙️ إعدادات الحساب</h1>
+</header>
+
+<div class="container">
+  <h2>تحديث معلومات الحساب</h2>
+  <div class="profile-preview">
+    <img id="profileImg" src="https://i.pravatar.cc/150?img=12" alt="صورة المستخدم">
+  </div>
+  <form id="settingsForm">
+    <label for="name">الاسم الكامل:</label>
+    <input type="text" id="name" required>
+
+    <label for="email">البريد الإلكتروني:</label>
+    <input type="email" id="email" required>
+
+    <label for="password">كلمة المرور:</label>
+    <input type="password" id="password" required>
+
+    <label for="avatar">تغيير الصورة الشخصية:</label>
+    <input type="file" id="avatar" accept="image/*">
+
+    <button type="submit">💾 حفظ التغييرات</button>
+  </form>
+</div>
+
+<script>
+// تحميل بيانات المستخدم من localStorage
+let user = JSON.parse(localStorage.getItem("loggedUser"));
+if(!user){
+  alert("المرجو تسجيل الدخول أولا");
+  window.location.href="login.html";
+} else {
+  document.getElementById("name").value = user.name;
+  document.getElementById("email").value = user.email;
+  document.getElementById("password").value = user.password;
+  if(user.avatar) document.getElementById("profileImg").src = user.avatar;
+}
+
+// تحديث البيانات
+document.getElementById("settingsForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  let avatar = document.getElementById("profileImg").src;
+
+  // تحديث الصورة إذا اختار المستخدم ملف جديد
+  const fileInput = document.getElementById("avatar");
+  if(fileInput.files && fileInput.files[0]){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      avatar = e.target.result;
+      saveUser();
+    }
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    saveUser();
+  }
+
+  function saveUser(){
+    user.name = name;
+    user.email = email;
+    user.password = password;
+    user.avatar = avatar;
+    localStorage.setItem("loggedUser", JSON.stringify(user));
+    document.getElementById("profileImg").src = avatar;
+    alert("✅ تم حفظ التغييرات بنجاح!");
+  }
+});
+</script>
+</body>
+</html>

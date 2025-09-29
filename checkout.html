@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Checkout - STORE RAYAN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:'Arial',sans-serif;margin:0;background:#f5f5f5;color:#333;}
+header{background:#2c3e50;color:white;padding:1rem 2rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
+header h1{margin:0;font-size:1.5rem;}
+.container{max-width:1000px;margin:2rem auto;padding:1rem;background:white;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.1);}
+.user-info h2{margin:0 0 .5rem 0;font-size:1.2rem;color:#2c3e50;}
+table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;}
+table th,table td{text-align:center;padding:10px;border-bottom:1px solid #ddd;}
+table th{background:#2c3e50;color:white;}
+table img{width:70px;height:50px;object-fit:cover;border-radius:6px;}
+.total{text-align:left;font-size:1.1rem;font-weight:bold;color:#27ae60;margin-top:1rem;}
+form{margin-top:1.5rem;}
+form label{display:block;margin:.5rem 0 .2rem;}
+form input, form textarea{width:100%;padding:.6rem;border:1px solid #ccc;border-radius:8px;font-size:1rem;}
+form textarea{resize:vertical;min-height:70px;}
+.actions{text-align:center;margin-top:1.5rem;}
+.actions button{background:#e67e22;color:white;border:none;padding:.8rem 2rem;border-radius:10px;font-size:1.1rem;cursor:pointer;transition:.3s;}
+.actions button:hover{background:#ca6f1e;}
+.empty{text-align:center;font-size:1.1rem;color:#777;padding:2rem;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💳 إتمام الطلب - STORE RAYAN</h1>
+</header>
+
+<div class="container">
+  <div class="user-info" id="userInfo"></div>
+
+  <div id="cartContainer"></div>
+
+  <!-- فورم بيانات الشحن -->
+  <form id="shippingForm">
+    <h2>📦 بيانات الشحن</h2>
+    <label for="fullName">الاسم الكامل:</label>
+    <input type="text" id="fullName" required>
+
+    <label for="email">البريد الإلكتروني:</label>
+    <input type="email" id="email" required>
+
+    <label for="address">عنوان الشحن:</label>
+    <textarea id="address" required></textarea>
+
+    <label for="phone">رقم الهاتف:</label>
+    <input type="tel" id="phone" required>
+  </form>
+
+  <div class="actions">
+    <button onclick="confirmOrder()">✅ تأكيد الشراء</button>
+  </div>
+</div>
+
+<script>
+// جلب بيانات المستخدم
+const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+if(!loggedUser){
+  alert("المرجو تسجيل الدخول لإتمام عملية الشراء.");
+  window.location.href = "login.html";
+}
+
+// عرض بيانات المستخدم
+document.getElementById("userInfo").innerHTML = `
+  <h2>👤 مرحبا ${loggedUser.name}</h2>
+  <p><b>الإيميل المسجل:</b> ${loggedUser.email}</p>
+`;
+
+// جلب السلة
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const cartContainer = document.getElementById("cartContainer");
+
+if(cart.length===0){
+  cartContainer.innerHTML = `<div class="empty">🛒 السلة فارغة</div>`;
+  document.querySelector(".actions").style.display="none";
+} else {
+  let total = 0;
+  let rows = cart.map((p,i)=>{
+    let sum = p.price * (p.qty||1);
+    total += sum;
+    return `
+      <tr>
+        <td><img src="${p.img}" alt="${p.name}"></td>
+        <td>${p.name}</td>
+        <td>${p.price} درهم</td>
+        <td>${p.qty||1}</td>
+        <td>${sum} درهم</td>
+      </tr>
+    `;
+  }).join("");
+
+  cartContainer.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>الصورة</th>
+          <th>المنتج</th>
+          <th>السعر</th>
+          <th>الكمية</th>
+          <th>المجموع</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
+    <div class="total">💰 الإجمالي: ${total} درهم</div>
+  `;
+}
+
+// تأكيد الطلب
+function confirmOrder(){
+  const fullName = document.getElementById("fullName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const address = document.getElementById("address").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+
+  if(!fullName || !email || !address || !phone){
+    alert("⚠️ المرجو إدخال جميع البيانات المطلوبة.");
+    return;
+  }
+
+  // هنا ممكن تبعث البيانات للسيرفر أو تخزنها
+  const order = {
+    user: loggedUser,
+    shipping: {fullName,email,address,phone},
+    cart
+  };
+
+  console.log("📦 طلبية جديدة:", order);
+  alert("✅ تم تأكيد طلبك!\nسنتواصل معك قريبا على رقم الهاتف أو البريد الإلكتروني.");
+  localStorage.removeItem("cart");
+  window.location.href = "index.html";
+}
+</script>
+</body>
+</html>

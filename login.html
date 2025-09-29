@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تسجيل الدخول / إنشاء حساب</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+body{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#667eea,#764ba2,#ff758c,#ff7eb3);
+  background-size:400% 400%;
+  animation:gradient 15s ease infinite;
+}
+@keyframes gradient{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+.container{
+  background:rgba(255,255,255,0.1);
+  border-radius:20px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.3);
+  backdrop-filter:blur(10px);
+  padding:2rem;
+  width:90%;
+  max-width:400px;
+  color:white;
+  transition:0.5s;
+}
+h2{text-align:center;margin-bottom:1.5rem;}
+form{display:flex;flex-direction:column;}
+input{
+  padding:0.8rem 1rem;
+  margin:.5rem 0;
+  border:none;
+  border-radius:10px;
+  outline:none;
+  background:rgba(255,255,255,0.2);
+  color:white;
+  font-size:1rem;
+}
+input::placeholder{color:#eee;}
+button{
+  margin-top:1rem;
+  padding:0.8rem;
+  border:none;
+  border-radius:10px;
+  background:#e67e22;
+  color:white;
+  font-size:1rem;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover{background:#d35400;}
+p{text-align:center;margin-top:1rem;}
+a{color:#ffd700;text-decoration:none;cursor:pointer;}
+a:hover{text-decoration:underline;}
+.hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- login -->
+  <div id="login-box">
+    <h2>تسجيل الدخول</h2>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="login-password" placeholder="كلمة المرور" required>
+      <button type="submit">دخول</button>
+    </form>
+    <p>ليس لديك حساب؟ <a onclick="showRegister()">تسجيل جديد</a></p>
+  </div>
+
+  <!-- register -->
+  <div id="register-box" class="hidden">
+    <h2>إنشاء حساب</h2>
+    <form id="register-form">
+      <input type="text" id="name" placeholder="الاسم الكامل" required>
+      <input type="email" id="register-email" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="register-password" placeholder="كلمة المرور" required>
+      <button type="submit">تسجيل</button>
+    </form>
+    <p>عندك حساب؟ <a onclick="showLogin()">تسجيل الدخول</a></p>
+  </div>
+</div>
+
+<script>
+// تبديل بين login / register
+function showRegister(){
+  document.getElementById("login-box").classList.add("hidden");
+  document.getElementById("register-box").classList.remove("hidden");
+}
+function showLogin(){
+  document.getElementById("register-box").classList.add("hidden");
+  document.getElementById("login-box").classList.remove("hidden");
+}
+
+// جلب لائحة المستخدمين من localStorage
+function getUsers(){
+  return JSON.parse(localStorage.getItem("users")) || [];
+}
+
+// حفظ لائحة المستخدمين
+function saveUsers(users){
+  localStorage.setItem("users",JSON.stringify(users));
+}
+
+// تسجيل حساب جديد
+document.getElementById("register-form").addEventListener("submit",function(e){
+  e.preventDefault();
+  let users=getUsers();
+  const email=document.getElementById("register-email").value;
+  const password=document.getElementById("register-password").value;
+  const name=document.getElementById("name").value;
+
+  // التحقق واش كاين نفس الإيميل
+  if(users.some(u=>u.email===email)){
+    alert("❌ البريد الإلكتروني مسجل من قبل");
+    return;
+  }
+
+  const newUser={name,email,password};
+  users.push(newUser);
+  saveUsers(users);
+
+  alert("تم التسجيل بنجاح 🎉");
+  showLogin();
+});
+
+// تسجيل الدخول
+document.getElementById("login-form").addEventListener("submit",function(e){
+  e.preventDefault();
+  const email=document.getElementById("login-email").value;
+  const password=document.getElementById("login-password").value;
+  const users=getUsers();
+
+  const found=users.find(u=>u.email===email && u.password===password);
+  if(found){
+    localStorage.setItem("loggedUser",JSON.stringify(found));
+    alert("تم تسجيل الدخول ✅ أهلا " + found.name);
+    window.location.href="index.html"; // غيرها لصفحتك الرئيسية
+  }else{
+    alert("❌ البريد أو كلمة المرور غير صحيحة");
+  }
+});
+</script>
+</body>
+</html>
