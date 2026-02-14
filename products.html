@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول - متجرك</title>
+    <title>المنتجات - متجرك</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -15,32 +15,29 @@
             </div>
             <nav class="nav-menu">
                 <a href="index.html">الرئيسية</a>
-                <a href="products.html">المنتجات</a>
+                <a href="products.html" class="active">المنتجات</a>
                 <a href="cart.html">السلة (<span id="cart-count">0</span>)</a>
-                <a href="login.html" class="active">تسجيل الدخول</a>
+                <a href="login.html">تسجيل الدخول</a>
                 <a href="settings.html">الملف الشخصي</a>
             </nav>
         </div>
     </header>
 
-    <section class="auth-section">
-        <div class="auth-container">
-            <div class="auth-form">
-                <h2>تسجيل الدخول</h2>
-                <form id="loginForm">
-                    <div class="input-group">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="username" placeholder="اسم المستخدم" required>
-                    </div>
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="password" placeholder="كلمة المرور" required>
-                    </div>
-                    <button type="submit" class="btn-primary">تسجيل الدخول</button>
-                </form>
-                <p class="auth-link">
-                    ليس لديك حساب؟ <a href="register.html">سجل الآن</a>
-                </p>
+    <section class="products-section">
+        <div class="container">
+            <h2>جميع المنتجات</h2>
+            <div class="filters">
+                <select id="category-filter">
+                    <option value="all">جميع الفئات</option>
+                    <option value="electronics">إلكترونيات</option>
+                    <option value="clothing">ملابس</option>
+                    <option value="books">كتب</option>
+                    <option value="home">منزل</option>
+                </select>
+                <input type="text" id="search-input" placeholder="بحث عن منتج...">
+            </div>
+            <div class="products-grid" id="products-grid">
+                <!-- سيتم ملؤها عبر JavaScript -->
             </div>
         </div>
     </section>

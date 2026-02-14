@@ -1,247 +1,101 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<title>STORE RAYAN – المنتجات</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{font-family:'Arial',sans-serif;margin:0;background:#f5f5f5;color:#333;}
-header{background:#2c3e50;color:white;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
-.header-left, .header-right{display:flex;align-items:center;gap:1rem;}
-.header-center{text-align:center;flex:1;}
-.header-center h1{margin:0;font-size:1.5rem;}
-.header-center h2{margin:.3rem 0;}
-.search-box{margin-top:.5rem;}
-.search-box input{width:60%;padding:.5rem 1rem;border-radius:20px;border:none;font-size:1rem;}
-.btn{padding:.5rem 1rem;border-radius:20px;border:none;color:white;cursor:pointer;transition:.3s;}
-.btn:hover{opacity:.8;}
-.cart{position:relative;background:#27ae60;}
-.cart span{position:absolute;top:-8px;right:-8px;background:red;color:white;font-size:.7rem;padding:2px 6px;border-radius:50%;}
-
-.profile-btn{cursor:pointer;display:flex;align-items:center;gap:.5rem;}
-.profile-btn img{width:40px;height:40px;border-radius:50%;border:2px solid white;object-fit:cover;}
-
-.profile-menu{
-  display:none;position:absolute;top:70px;right:20px;background:white;color:#333;
-  border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.2);min-width:250px;padding:1rem;text-align:center;z-index:200;
-}
-.profile-menu img{width:70px;height:70px;border-radius:50%;margin-bottom:.5rem;}
-.profile-menu p{margin:.3rem 0;}
-.profile-menu button{width:100%;margin-top:.5rem;padding:.5rem;border:none;border-radius:10px;cursor:pointer;}
-.profile-menu button.settings{background:#3498db;color:white;}
-.profile-menu button.logout{background:#e74c3c;color:white;}
-.profile-menu button:hover{opacity:.85;}
-
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;padding:2rem;max-width:1300px;margin:auto;}
-.product{background:white;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.1);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s;}
-.product:hover{transform:translateY(-5px);box-shadow:0 8px 16px rgba(0,0,0,.2);}
-.product img{width:100%;height:180px;object-fit:cover;}
-.product .info{padding:1rem;flex-grow:1;display:flex;flex-direction:column;}
-.product h3{margin:0;font-size:1.1rem;color:#2c3e50;}
-.product p{margin:.5rem 0;color:#777;font-size:.85rem;}
-.product .price{font-size:1rem;font-weight:bold;color:#27ae60;margin-top:auto;}
-.product .actions{display:flex;gap:.5rem;margin-top:.5rem;}
-.product button{flex:1;padding:.5rem;border:none;border-radius:6px;cursor:pointer;transition:.3s;}
-.product button.buy{background:#2980b9;color:white;}
-.product button.buy:hover{background:#21618c;}
-.product button.add{background:#27ae60;color:white;}
-.product button.add:hover{background:#1e8449;}
-
-footer{background:#2c3e50;color:white;text-align:center;padding:1rem;margin-top:2rem;}
-
-/* كود مودال السلة */
-#cartModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:300;}
-#cartModalContent{background:white;padding:1rem 2rem;border-radius:12px;max-width:600px;width:90%;max-height:80%;overflow-y:auto;position:relative;}
-#cartModalContent h2{text-align:center;margin-bottom:1rem;}
-.cart-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;border-bottom:1px solid #ddd;padding-bottom:10px;}
-.cart-item img{width:60px;height:60px;object-fit:cover;border-radius:8px;}
-.cart-item div p{margin:0;}
-.cart-item button{background:#e74c3c;color:white;border:none;padding:.3rem .7rem;border-radius:6px;cursor:pointer;}
-.cartModalButtons{margin-top:1rem;text-align:center;}
-.cartModalButtons button{padding:.7rem 1.5rem;border:none;border-radius:10px;color:white;cursor:pointer;margin:0 5px;}
-.checkout-btn{background:#27ae60;}
-.close-btn{background:#e74c3c;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر إلكتروني احترافي</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-<header>
-  <div class="header-left">
-    <div class="cart btn" onclick="viewCart()">
-  <img src="https://i.imgur.com/LDttFTR.jpeg" alt="سلة التسوق" style="width:32px;height:32px;">
-  <span id="cart-count">0</span>
-</div>
-
-  </div>
-  <div class="header-center">
-    <h1>🛍️ STORE RAYAN</h1>
-    <h2>المنتجات</h2>
-    <div class="search-box">
-      <input type="text" id="search" placeholder="🔍 ابحث عن المنتجات...">
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="profile-btn" onclick="toggleProfile()">
-      <img id="profileAvatar" src="https://i.pravatar.cc/150?img=12" alt="avatar">
-      <span id="profileName">تسجيل الدخول</span>
-    </div>
-  </div>
-</header>
-
-<!-- منبثق السلة -->
-<div id="cartModal">
-  <div id="cartModalContent">
-    <h2>🛒 سلة التسوق</h2>
-    <div id="cartItems"></div>
-    <div class="cartModalButtons">
-      <button class="checkout-btn" onclick="checkoutCart()">💳 إتمام الدفع</button>
-      <button class="close-btn" onclick="closeCart()">❌ إغلاق</button>
-    </div>
-  </div>
-</div>
-
-<div id="profileMenu" class="profile-menu"></div>
-<section class="products" id="products"></section>
-
-<footer>&copy; 2025 STORE RAYAN - جميع الحقوق محفوظة</footer>
-
-<script>
-let productsData = [
-  {name:"هاتف ذكي", price:1200, img:"https://picsum.photos/300/200?1"},
-  {name:"سماعات لاسلكية", price:250, img:"https://picsum.photos/300/200?2"},
-  {name:"لابتوب حديث", price:3500, img:"https://picsum.photos/300/200?3"},
-  {name:"ساعة ذكية", price:500, img:"https://picsum.photos/300/200?4"}
-];
-
-const productsContainer = document.getElementById("products");
-const cartCount = document.getElementById("cart-count");
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-// عرض المنتجات
-function displayProducts(list){
-  productsContainer.innerHTML = "";
-  list.forEach((p,i)=>{
-    const div = document.createElement("div");
-    div.className = "product";
-    div.innerHTML = `
-      <img src="${p.img}" alt="${p.name}">
-      <div class="info">
-        <h3>${p.name}</h3>
-        <p>وصف قصير للمنتج.</p>
-        <div class="price">${p.price} درهم</div>
-        <div class="actions">
-          <button class="add" onclick="addToCart(${i})">أضف إلى السلة</button>
-          <button class="buy" onclick="buyOne(${i})">شراء</button>
+    <!-- شريط التنقل -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h2>متجر<span style="color: #ff6b6b;">ك</span></h2>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="active">الرئيسية</a>
+                <a href="products.html">المنتجات</a>
+                <a href="cart.html">السلة (<span id="cart-count">0</span>)</a>
+                <a href="login.html">تسجيل الدخول</a>
+                <a href="settings.html">الملف الشخصي</a>
+            </nav>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
         </div>
-      </div>
-    `;
-    productsContainer.appendChild(div);
-  });
-}
-displayProducts(productsData);
+    </header>
 
-// البحث
-document.getElementById("search").addEventListener("input",function(){
-  const q=this.value.toLowerCase();
-  displayProducts(productsData.filter(p=>p.name.toLowerCase().includes(q)));
-});
-
-// تحقق من تسجيل الدخول
-function isLoggedIn(){ return JSON.parse(localStorage.getItem("loggedUser")); }
-
-// إضافة إلى السلة
-function addToCart(index){
-  if(!isLoggedIn()){ alert("يرجى تسجيل الدخول أولاً 📝"); window.location.href="login.html"; return; }
-  const existing = cart.find(p => p.name === productsData[index].name);
-  if(existing){ existing.qty = (existing.qty || 1) + 1; }
-  else { cart.push({...productsData[index], qty:1}); }
-  localStorage.setItem('cart', JSON.stringify(cart));
-  cartCount.textContent = cart.reduce((sum,p)=>sum+(p.qty||1),0);
-  viewCart();
-}
-
-// شراء منتج واحد
-function buyOne(index){
-  if(!isLoggedIn()){ alert("يرجى تسجيل الدخول أولاً 📝"); window.location.href="login.html"; return; }
-  const product = {...productsData[index], qty:1};
-  localStorage.setItem('cart', JSON.stringify([product]));
-  viewCart();
-}
-
-// عرض السلة بشكل احترافي
-function viewCart(){
-  const modal = document.getElementById("cartModal");
-  const container = document.getElementById("cartItems");
-  if(cart.length===0){ alert("السلة فارغة."); return; }
-  container.innerHTML = "";
-  cart.forEach((p,i)=>{
-    const div = document.createElement("div");
-    div.className = "cart-item";
-    div.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;">
-        <img src="${p.img}" alt="${p.name}">
-        <div>
-          <p><b>${p.name}</b></p>
-          <p>${p.price} درهم × ${p.qty}</p>
+    <!-- شاشة الترحيب -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>أفضل المنتجات بأسعار منافسة</h1>
+            <p>اكتشف مجموعة متنوعة من المنتجات بجودة عالية وخدمة عملاء متميزة</p>
+            <a href="products.html" class="btn-primary">تسوق الآن</a>
         </div>
-      </div>
-      <button onclick="removeFromCart(${i})">حذف</button>
-    `;
-    container.appendChild(div);
-  });
-  modal.style.display = "flex";
-}
-function closeCart(){ document.getElementById("cartModal").style.display = "none"; }
-function removeFromCart(index){
-  cart.splice(index,1);
-  localStorage.setItem('cart',JSON.stringify(cart));
-  cartCount.textContent = cart.reduce((sum,p)=>sum+(p.qty||1),0);
-  viewCart();
-}
-function checkoutCart(){
-  if(cart.length===0){ alert("السلة فارغة."); return; }
-  localStorage.setItem('cart',JSON.stringify(cart));
-  window.location.href="checkout.html";
-}
+    </section>
 
-// البروفايل
-function toggleProfile(){
-  const menu=document.getElementById("profileMenu");
-  if(menu.style.display==="block"){menu.style.display="none"; return;}
-  const user=isLoggedIn();
-  if(user){
-    menu.innerHTML = `
-      <img src="${user.avatar||'https://i.pravatar.cc/100'}" alt="profile">
-      <p><b>👤 الاسم:</b> ${user.name}</p>
-      <p><b>📧 الإيميل:</b> ${user.email}</p>
-      <button class="settings" onclick="goSettings()">⚙️ الإعدادات</button>
-      <button class="logout" onclick="logout()">🚪 تسجيل الخروج</button>
-    `;
-    document.getElementById("profileAvatar").src = user.avatar || 'https://i.pravatar.cc/150?img=12';
-    document.getElementById("profileName").textContent = user.name;
-  } else {
-    menu.innerHTML = `
-      <p>🔑 لم تقم بتسجيل الدخول</p>
-      <button onclick="window.location.href='login.html'">تسجيل الدخول</button>
-      <button onclick="window.location.href='login.html'">إنشاء حساب</button>
-    `;
-    document.getElementById("profileName").textContent = "تسجيل الدخول";
-    document.getElementById("profileAvatar").src = 'https://i.pravatar.cc/150?img=12';
-  }
-  menu.style.display="block";
-}
-function goSettings(){ window.location.href="settings.html"; }
-function logout(){ localStorage.removeItem("loggedUser"); alert("تم تسجيل الخروج!"); location.reload(); }
+    <!-- ميزات الموقع -->
+    <section class="features">
+        <div class="container">
+            <div class="feature-item">
+                <i class="fas fa-shipping-fast"></i>
+                <h3>توصيل سريع</h3>
+                <p>توصيل سريع وآمن إلى جميع أنحاء المملكة</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-undo"></i>
+                <h3>إرجاع سهل</h3>
+                <p>إرجاع المنتجات خلال 30 يومًا من الشراء</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-shield-alt"></i>
+                <h3>حماية تامة</h3>
+                <p>حماية بياناتك وبياناتك المالية</p>
+            </div>
+        </div>
+    </section>
 
-cartCount.textContent = cart.reduce((sum,p)=>sum+(p.qty||1),0);
+    <!-- المنتجات المميزة -->
+    <section class="featured-products">
+        <div class="container">
+            <h2>المنتجات المميزة</h2>
+            <div class="products-grid" id="featured-products">
+                <!-- سيتم ملؤها عبر JavaScript -->
+            </div>
+        </div>
+    </section>
 
-// إخفاء القائمة إذا ضغط خارجها
-window.onclick = function(event){
-  if(!event.target.closest('.profile-btn') && !event.target.closest('.profile-menu')){
-    document.getElementById("profileMenu").style.display="none";
-  }
-}
-</script>
+    <!-- الت pied -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>متجرك</h3>
+                    <p>أفضل المتاجر الإلكترونية في المملكة العربية السعودية</p>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="products.html">المنتجات</a></li>
+                        <li><a href="login.html">تسجيل الدخول</a></li>
+                        <li><a href="settings.html">الملف الشخصي</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <p><i class="fas fa-phone"></i> 966 123 456 789</p>
+                    <p><i class="fas fa-envelope"></i> info@ecommerce.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 متجر إلكتروني. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
 
+    <script src="script.js"></script>
 </body>
 </html>
