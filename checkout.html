@@ -3,70 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنهاء الطلب - متجرك</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>أداء الفواتير - الدفع السريع</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f4f7f6; }
+        .provider-card { transition: all 0.3s ease; border: 2px solid transparent; cursor: pointer; }
+        .provider-card:hover { transform: translateY(-3px); border-color: #e2e8f0; }
+        .provider-card.active { border-color: #ff4500; background-color: #fffaf0; box-shadow: 0 4px 12px rgba(255, 69, 0, 0.1); }
+        .price-btn { transition: all 0.2s ease; border: 1px solid #e2e8f0; }
+        .price-btn:hover { border-color: #ff4500; color: #ff4500; background-color: #fffaf0; }
+        .price-btn.active { background-color: #ff4500; color: white; border-color: #ff4500; }
+        .provider-logo { max-height: 40px; width: auto; object-fit: contain; }
+    </style>
 </head>
-<body>
-    <header class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <h2>متجر<span style="color: #ff6b6b;">ك</span></h2>
+<body class="bg-gray-100">
+
+    <header class="bg-[#d97706] shadow-md p-4 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-center items-center">
+            <div class="h-10 md:h-16">
+                <img src="https://i.postimg.cc/j2zSnFGm/logo.png" alt="Logo" class="h-full w-auto">
             </div>
-            <nav class="nav-menu">
-                <a href="index.html">الرئيسية</a>
-                <a href="products.html">المنتجات</a>
-                <a href="cart.html" class="active">السلة (<span id="cart-count">0</span>)</a>
-                <a href="login.html">تسجيل الدخول</a>
-                <a href="settings.html">الملف الشخصي</a>
-            </nav>
         </div>
     </header>
 
-    <section class="checkout-section">
-        <div class="container">
-            <h2>إنهاء الطلب</h2>
-            <div class="checkout-container">
-                <form id="checkout-form">
-                    <div class="form-group">
-                        <label>الاسم الكامل</label>
-                        <input type="text" id="full-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>البريد الإلكتروني</label>
-                        <input type="email" id="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label>رقم الهاتف</label>
-                        <input type="tel" id="phone" required>
-                    </div>
-                    <div class="form-group">
-                        <label>عنوان التسليم</label>
-                        <textarea id="address" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>طريقة الدفع</label>
-                        <select id="payment-method" required>
-                            <option value="">اختر طريقة الدفع</option>
-                            <option value="credit">بطاقة ائتمان</option>
-                            <option value="cash">دفع عند الاستلام</option>
-                            <option value="bank">تحويل بنكي</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-primary">إنهاء الطلب</button>
-                </form>
+    <main class="max-w-6xl mx-auto mt-8 p-4 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white shadow-2xl rounded-3xl mb-12 border border-gray-100">
+        
+        <div class="space-y-6">
+            <div class="overflow-hidden rounded-2xl border bg-gray-50 flex items-center justify-center p-4 h-[400px]">
+                <img id="mainImage" src="https://i.postimg.cc/2j2ZGqJd/iam.png" alt="Main" class="max-w-full max-h-full object-contain transition-opacity duration-300">
+            </div>
+            <div class="flex justify-center gap-3">
+                <img onclick="changeImage('https://i.postimg.cc/2j2ZGqJd/iam.png')" src="https://i.postimg.cc/2j2ZGqJd/iam.png" class="w-16 h-16 md:w-20 md:h-20 border-2 rounded-xl cursor-pointer hover:border-orange-500 p-2 object-contain bg-white transition">
+                <img onclick="changeImage('https://i.postimg.cc/jqZ7cW9H/orange.png')" src="https://i.postimg.cc/jqZ7cW9H/orange.png" class="w-16 h-16 md:w-20 md:h-20 border-2 rounded-xl cursor-pointer hover:border-orange-500 p-2 object-contain bg-white transition">
+                <img onclick="changeImage('https://i.postimg.cc/66Yvc7SL/inwi.png')" src="https://i.postimg.cc/66Yvc7SL/inwi.png" class="w-16 h-16 md:w-20 md:h-20 border-2 rounded-xl cursor-pointer hover:border-orange-500 p-2 object-contain bg-white transition">
+                <img onclick="changeImage('https://i.postimg.cc/WpXk8DK7/win.png')" src="https://i.postimg.cc/WpXk8DK7/win.png" class="w-16 h-16 md:w-20 md:h-20 border-2 rounded-xl cursor-pointer hover:border-orange-500 p-2 object-contain bg-white transition">
             </div>
         </div>
-    </section>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2023 متجر إلكتروني. جميع الحقوق محفوظة.</p>
+        <div class="text-right">
+            <h1 class="text-3xl font-black mb-1 text-gray-900">أداء الفواتير</h1>
+            <p class="text-orange-600 text-4xl font-black mb-8">$ 4.86</p>
+
+            <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2">
+                <span class="w-2 h-6 bg-orange-500 rounded-full"></span> اختيار المزود :
+            </h3>
+            <div class="grid grid-cols-4 gap-3 mb-10">
+                <div class="provider-card active p-3 rounded-2xl bg-white border-2 flex items-center justify-center" onclick="selectProvider(this)">
+                    <img src="https://i.postimg.cc/2j2ZGqJd/iam.png" class="provider-logo" alt="IAM">
+                </div>
+                <div class="provider-card p-3 rounded-2xl bg-white border-2 flex items-center justify-center" onclick="selectProvider(this)">
+                    <img src="https://i.postimg.cc/jqZ7cW9H/orange.png" class="provider-logo" alt="Orange">
+                </div>
+                <div class="provider-card p-3 rounded-2xl bg-white border-2 flex items-center justify-center" onclick="selectProvider(this)">
+                    <img src="https://i.postimg.cc/66Yvc7SL/inwi.png" class="provider-logo" alt="Inwi">
+                </div>
+                <div class="provider-card p-3 rounded-2xl bg-white border-2 flex items-center justify-center" onclick="selectProvider(this)">
+                    <img src="https://i.postimg.cc/WpXk8DK7/win.png" class="provider-logo" alt="Win">
+                </div>
+            </div>
+
+            <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2">
+                <span class="w-2 h-6 bg-orange-500 rounded-full"></span> مبلغ الفاتورة :
+            </h3>
+            <div class="grid grid-cols-3 md:grid-cols-4 gap-2 mb-10">
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">29 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">39 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">49 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">65 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">69 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">79 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">89 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">99 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">119 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">129 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">159 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">169 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">199 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">249 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">300 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">375 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">400 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">500 درهم</button>
+            </div>
+
+            <div class="border-2 border-dashed border-orange-200 p-6 md:p-8 rounded-3xl bg-orange-50/30 mb-10">
+                <h4 class="text-center font-bold mb-6 text-gray-800 underline decoration-orange-400 decoration-2 underline-offset-8">معلومات مقدم الطلب</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <input type="text" placeholder="الاسم الشخصي" class="p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none shadow-sm transition-all text-right">
+                    <input type="text" placeholder="اسم العائلة" class="p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none shadow-sm transition-all text-right">
+                    <input type="email" placeholder="البريد الإلكتروني" class="p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none shadow-sm transition-all text-right">
+                    <input type="text" placeholder="الدولة" class="p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none shadow-sm transition-all text-right">
+                </div>
+                <input type="text" placeholder="رقم الهاتف أو رقم الفاتورة..." class="w-full mt-5 p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none shadow-sm transition-all text-right">
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center gap-4">
+                <div class="flex items-center border-2 border-gray-100 rounded-2xl overflow-hidden bg-white h-[60px]">
+                    <button class="px-6 h-full hover:bg-gray-100 font-bold text-xl" onclick="stepUp()">+</button>
+                    <input id="qty" type="number" value="1" class="w-16 text-center border-none focus:ring-0 font-black text-xl" readonly>
+                    <button class="px-6 h-full hover:bg-gray-100 font-bold text-xl" onclick="stepDown()">-</button>
+                </div>
+                <button class="w-full md:flex-1 bg-red-600 text-white font-black py-5 rounded-2xl hover:bg-red-700 shadow-xl shadow-red-200 active:scale-95 transition-all text-xl">
+                    إتمام الدفع الآن
+                </button>
             </div>
         </div>
+    </main>
+
+    <footer class="flex flex-col items-center justify-center gap-2 py-8 border-t border-gray-200 bg-white mt-10">
+        <img src="https://i.postimg.cc/j2zSnFGm/logo.png" alt="Logo" class="h-10 w-auto opacity-70">
+        <p class="text-gray-500 text-sm font-medium">&copy; 2024 - جميع الحقوق محفوظة</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        function changeImage(src) {
+            document.getElementById('mainImage').style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById('mainImage').src = src;
+                document.getElementById('mainImage').style.opacity = 1;
+            }, 200);
+        }
+        function selectProvider(el) {
+            document.querySelectorAll('.provider-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            const logoSrc = el.querySelector('img').src;
+            changeImage(logoSrc);
+        }
+        function selectPrice(btn) {
+            document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        function stepUp() { let input = document.getElementById('qty'); input.value = parseInt(input.value) + 1; }
+        function stepDown() { let input = document.getElementById('qty'); if(input.value > 1) input.value = parseInt(input.value) - 1; }
+    </script>
 </body>
 </html>
