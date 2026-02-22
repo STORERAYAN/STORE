@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أداء الفواتير - الدفع السريع</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f4f7f6; }
+        .provider-card { transition: all 0.3s ease; border: 2px solid transparent; cursor: pointer; }
+        .provider-card:hover { transform: translateY(-3px); border-color: #e2e8f0; }
+        .provider-card.active { border-color: #ff4500; background-color: #fffaf0; box-shadow: 0 4px 12px rgba(255, 69, 0, 0.1); }
+        .price-btn { transition: all 0.2s ease; border: 1px solid #e2e8f0; background: white; }
+        .price-btn:hover { border-color: #ff4500; color: #ff4500; background-color: #fffaf0; }
+        .price-btn.active { background-color: #ff4500 !important; color: white !important; border-color: #ff4500; }
+        .provider-logo { max-height: 40px; width: auto; object-fit: contain; }
+        .dashed-container { border: 2px dashed #ffb800; border-radius: 20px; background: white; }
+        .payment-option { transition: all 0.3s ease; border: 1px solid #e2e8f0; cursor: pointer; }
+        .payment-option:hover { border-color: #ffb800; background-color: #fffdf5; }
+        .payment-option.active { border-color: #ffb800; background-color: #fffdf5; ring: 2px; ring-color: #ffb800; }
+        #checkout-page { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header class="bg-[#d97706] shadow-md p-4 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-center items-center">
+            <div class="h-10 md:h-16">
+                <img src="https://i.postimg.cc/8kRqNLT0/logo.gif" alt="Logo" class="h-full w-auto">
+            </div>
+        </div>
+    </header>
+
+    <main id="product-page" class="max-w-6xl mx-auto mt-8 p-4 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white shadow-2xl rounded-3xl mb-12 border border-gray-100">
+        <div class="space-y-6 text-right">
+            <div class="overflow-hidden rounded-2xl border bg-gray-50 flex items-center justify-center p-4 h-[400px]">
+                <img id="mainImage" src="https://i.postimg.cc/2j2ZGqJd/iam.png" alt="Main" class="max-w-full max-h-full object-contain transition-opacity duration-300">
+            </div>
+            <div class="flex justify-center gap-3">
+                <img onclick="changeImage('https://i.postimg.cc/2j2ZGqJd/iam.png')" src="https://i.postimg.cc/2j2ZGqJd/iam.png" class="w-16 h-16 border-2 rounded-xl cursor-pointer hover:border-orange-500 p-2 object-contain bg-white">
+                <img onclick="changeImage('https://i.postimg.cc/jqZ7cW9H/orange.png')" src="https://i.postimg.cc/jqZ7cW9H/orange.png" class="w-16 h-16 border-2 rounded-xl cursor-pointer hover:border-orange-500 p-2 object-contain bg-white">
+                <img onclick="changeImage('https://i.postimg.cc/66Yvc7SL/inwi.png')" src="https://i.postimg.cc/66Yvc7SL/inwi.png" class="w-16 h-16 border-2 rounded-xl cursor-pointer hover:border-orange-500 p-2 object-contain bg-white">
+                <img onclick="changeImage('https://i.postimg.cc/WpXk8DK7/win.png')" src="https://i.postimg.cc/WpXk8DK7/win.png" class="w-16 h-16 border-2 rounded-xl cursor-pointer hover:border-orange-500 p-2 object-contain bg-white">
+            </div>
+        </div>
+
+        <div class="text-right">
+            <h1 class="text-3xl font-black mb-1 text-gray-900">أداء الفواتير</h1>
+            <p class="text-orange-600 text-4xl font-black mb-8">$ 4.86</p>
+
+            <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2">
+                <span class="w-2 h-6 bg-orange-500 rounded-full"></span> اختيار المزود :
+            </h3>
+            <div class="grid grid-cols-4 gap-3 mb-8">
+                <div class="provider-card active p-3 rounded-2xl bg-white border-2 flex items-center justify-center" onclick="selectProvider(this, 'اتصالات المغرب - IAM')">
+                    <img src="https://i.postimg.cc/2j2ZGqJd/iam.png" class="provider-logo" alt="IAM">
+                </div>
+                <div class="provider-card p-3 rounded-2xl bg-white border-2 flex items-center justify-center" onclick="selectProvider(this, 'أورنج - Orange')">
+                    <img src="https://i.postimg.cc/jqZ7cW9H/orange.png" class="provider-logo" alt="Orange">
+                </div>
+                <div class="provider-card p-3 rounded-2xl bg-white border-2 flex items-center justify-center" onclick="selectProvider(this, 'إنوي - Inwi')">
+                    <img src="https://i.postimg.cc/66Yvc7SL/inwi.png" class="provider-logo" alt="Inwi">
+                </div>
+                <div class="provider-card p-3 rounded-2xl bg-white border-2 flex items-center justify-center" onclick="selectProvider(this, 'وين - Win')">
+                    <img src="https://i.postimg.cc/WpXk8DK7/win.png" class="provider-logo" alt="Win">
+                </div>
+            </div>
+
+            <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2">
+                <span class="w-2 h-6 bg-orange-500 rounded-full"></span> مبلغ الفاتورة :
+            </h3>
+            <div class="grid grid-cols-3 md:grid-cols-4 gap-2 mb-8">
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">29 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">39 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">49 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">65 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">69 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">79 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">89 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">99 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">119 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">129 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">159 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">169 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">199 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">249 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">300 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">375 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">400 درهم</button>
+                <button onclick="selectPrice(this)" class="price-btn py-2 px-1 text-xs md:text-sm rounded-lg font-bold">500 درهم</button>
+            </div>
+
+            <div class="border-2 border-dashed border-orange-200 p-6 rounded-3xl bg-orange-50/30 mb-8">
+                <h4 class="text-center font-bold mb-4 text-gray-800 underline underline-offset-8">معلومات مقدم الطلب</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="fName" placeholder="الاسم الشخصي" class="p-3 border rounded-xl text-right outline-none">
+                    <input type="text" id="lName" placeholder="اسم العائلة" class="p-3 border rounded-xl text-right outline-none">
+                    <input type="email" id="email" placeholder="البريد الإلكتروني" class="p-3 border rounded-xl text-right outline-none md:col-span-2">
+                </div>
+                <input type="text" id="billInfo" placeholder="رقم الهاتف أو رقم الفاتورة..." class="w-full mt-4 p-3 border rounded-xl text-right outline-none">
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center gap-4">
+                <div class="flex items-center border-2 border-gray-100 rounded-2xl bg-white h-[60px]">
+                    <button class="px-6 font-bold text-xl" onclick="stepUp()">+</button>
+                    <input id="qty" type="number" value="1" class="w-12 text-center border-none font-black text-xl" readonly>
+                    <button class="px-6 font-bold text-xl" onclick="stepDown()">-</button>
+                </div>
+                <button onclick="goToCheckout()" class="w-full md:flex-1 bg-red-600 text-white font-black py-5 rounded-2xl hover:bg-red-700 shadow-xl transition-all text-xl">
+                    إتمام الدفع الآن
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <main id="checkout-page" class="max-w-5xl mx-auto mt-8 mb-12 p-4">
+        <div class="dashed-container p-6 md:p-10 shadow-sm bg-white">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-right">
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="border rounded-xl p-6 bg-white space-y-4">
+                        <h3 class="text-gray-800 text-lg font-bold border-b pb-2 mb-4 text-right">ملخص الطلب</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center"><span class="text-gray-500">الشركة:</span><span id="res-provider" class="font-bold">--</span></div>
+                            <div class="flex justify-between items-center"><span class="text-gray-500">الكمية:</span><span id="res-qty" class="font-bold">1</span></div>
+                            <div class="flex justify-between items-center border-t pt-4 font-bold text-lg"><span>المجموع:</span><span id="res-price" class="text-orange-600 text-2xl">--</span></div>
+                        </div>
+                        <button onclick="goBack()" class="w-full text-xs text-gray-400 mt-4 underline text-center block">تعديل الطلب</button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="payment-option active rounded-xl p-1 overflow-hidden border-2 border-orange-400">
+                        <div class="bg-orange-50 p-3 flex justify-between items-center">
+                            <input type="radio" name="pay" id="p1" checked><label for="p1" class="font-bold text-orange-800">BINANCE PAY</label>
+                        </div>
+                        <div class="p-4 bg-white text-sm space-y-3">
+                            <p>قم بي ارسال USDT الى هدا الحساب [ 120694333 ]</p>
+                            <textarea id="txnId" placeholder="ID المعاملة..." class="w-full border rounded-lg p-3 h-24 text-right"></textarea>
+                        </div>
+                    </div>
+                    <div class="payment-option rounded-xl p-4 flex justify-between items-center" onclick="selectPay(this)"><input type="radio" name="pay" id="p2"><label for="p2" class="font-bold">USDT (TRC20)</label></div>
+                    <div class="payment-option rounded-xl p-4 flex justify-between items-center" onclick="selectPay(this)"><input type="radio" name="pay" id="p3"><label for="p3" class="font-bold">TRX (TRC20)</label></div>
+                    
+                    <button id="finalBtn" onclick="finishAll()" class="w-full bg-orange-500 text-white font-black py-4 rounded-xl text-xl mt-6 active:scale-95 transition-transform">
+                        تأكيد عملية الدفع
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // إعدادات Supabase الخاصة بك
+        const SUPABASE_URL = 'https://dxphurkzzkpiyiplpvwj.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_ev1gKdbdyrBmOBTgvcrzGA_kB3-ciNw'; // يرجى التأكد من أن هذا هو الـ anon key
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let provider = "اتصالات المغرب - IAM"; let price = "";
+
+        function changeImage(s) { const i = document.getElementById('mainImage'); i.style.opacity = 0; setTimeout(() => { i.src = s; i.style.opacity = 1; }, 200); }
+        function selectProvider(e, n) { document.querySelectorAll('.provider-card').forEach(c => c.classList.remove('active')); e.classList.add('active'); provider = n; changeImage(e.querySelector('img').src); }
+        function selectPrice(b) { document.querySelectorAll('.price-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); price = b.innerText; }
+        function stepUp() { let q = document.getElementById('qty'); q.value = parseInt(q.value) + 1; }
+        function stepDown() { let q = document.getElementById('qty'); if(q.value > 1) q.value = parseInt(q.value) - 1; }
+        
+        function goToCheckout() {
+            if(!price) { alert("يرجى اختيار مبلغ الفاتورة أولاً"); return; }
+            if(!document.getElementById('fName').value || !document.getElementById('lName').value || !document.getElementById('email').value || !document.getElementById('billInfo').value) {
+                alert("يرجى ملء جميع الحقول المطلوبة قبل المتابعة.");
+                return;
+            }
+            document.getElementById('res-provider').innerText = provider;
+            document.getElementById('res-price').innerText = price;
+            document.getElementById('res-qty').innerText = document.getElementById('qty').value;
+            document.getElementById('product-page').style.display = 'none';
+            document.getElementById('checkout-page').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        function goBack() { document.getElementById('product-page').style.display = 'grid'; document.getElementById('checkout-page').style.display = 'none'; }
+        function selectPay(e) { document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active', 'border-2', 'border-orange-400')); e.classList.add('active', 'border-2', 'border-orange-400'); e.querySelector('input').checked = true; }
+
+        async function finishAll() {
+            const btn = document.getElementById('finalBtn');
+            const txn = document.getElementById('txnId').value;
+            
+            if(!txn && document.getElementById('p1').checked) {
+                alert("يرجى إدخال معرف المعاملة (Transaction ID)");
+                return;
+            }
+
+            btn.innerText = "جاري إرسال الطلب...";
+            btn.disabled = true;
+
+            const dataToInsert = {
+                first_name: document.getElementById('fName').value,
+                last_name: document.getElementById('lName').value,
+                email: document.getElementById('email').value,
+                bill_info: document.getElementById('billInfo').value,
+                provider: provider,
+                amount: price,
+                quantity: document.getElementById('qty').value,
+                transaction_id: txn,
+                payment_method: document.querySelector('input[name="pay"]:checked').parentElement.innerText.trim()
+            };
+
+            try {
+                const { error } = await _supabase.from('orders').insert([dataToInsert]);
+                if (error) throw error;
+                alert("تم إرسال طلبك بنجاح! شكراً لك.");
+                location.reload();
+            } catch (err) {
+                console.error(err);
+                alert("حدث خطأ أثناء الإرسال. يرجى التأكد من وجود جدول باسم 'orders' في Supabase.");
+            } finally {
+                btn.innerText = "تأكيد عملية الدفع";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
