@@ -9,38 +9,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; background-color: #f4f7f6; }
-        .provider-card { transition: all 0.3s ease; border: 2px solid transparent; cursor: pointer; overflow: hidden; position: relative; }
-        .provider-card:hover { transform: translateY(-3px); border-color: #e2e8f0; }
-        .provider-card.active { border-color: #ff4500; background-color: #fffaf0; box-shadow: 0 4px 12px rgba(255, 69, 0, 0.1); }
+        .provider-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; cursor: pointer; overflow: hidden; position: relative; }
+        .provider-card:hover { transform: translateY(-4px); border-color: #fb923c; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .provider-card.active { border-color: #ea580c; background-color: #fffaf0; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.15); transform: scale(1.02); }
         .logo-selector { transition: all 0.3s ease; border: 2px solid #eee; cursor: pointer; border-radius: 15px; padding: 10px; background: white; }
-        .logo-selector.active { border-color: #d97706; background-color: #fffaf0; transform: scale(1.05); }
-        .price-btn { transition: all 0.2s ease; border: 1px solid #e2e8f0; background: white; }
-        .price-btn:hover { border-color: #ff4500; color: #ff4500; background-color: #fffaf0; }
-        .price-btn.active { background-color: #ff4500 !important; color: white !important; border-color: #ff4500; }
+        .logo-selector:hover { border-color: #fb923c; }
+        .logo-selector.active { border-color: #d97706; background-color: #fffaf0; transform: scale(1.05); box-shadow: 0 4px 10px rgba(217, 119, 6, 0.1); }
+        .price-btn { transition: all 0.2s ease; border: 2px solid #e2e8f0; background: white; }
+        .price-btn:hover { border-color: #ea580c; color: #ea580c; background-color: #fffaf0; transform: translateY(-2px); }
+        .price-btn.active { background-color: #ea580c !important; color: white !important; border-color: #ea580c; transform: scale(1.05); box-shadow: 0 4px 10px rgba(234, 88, 12, 0.2); }
         .provider-logo { width: 100%; height: 100%; object-fit: cover; }
-        .dashed-container { border: 2px dashed #ffb800; border-radius: 20px; background: white; }
-        .payment-option { transition: all 0.3s ease; border: 1px solid #e2e8f0; cursor: pointer; margin-bottom: 10px; }
-        .payment-option.active { border-color: #ff4500; background-color: #fffaf0; }
+        .dashed-container { border: 2px dashed #fb923c; border-radius: 20px; background: white; }
+        .payment-option { transition: all 0.3s ease; border: 2px solid #e2e8f0; cursor: pointer; margin-bottom: 10px; }
+        .payment-option:hover { border-color: #fdba74; }
+        .payment-option.active { border-color: #ea580c; background-color: #fffaf0; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.1); }
         #checkout-page { display: none; }
-        .img-label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; text-align: center; font-size: 10px; padding: 2px 0; }
+        .img-label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; text-align: center; font-size: 11px; padding: 4px 0; font-weight: bold; backdrop-filter: blur(2px); }
+        
+        /* حركة الدخول السلسة لصفحة الدفع */
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
+<link rel="stylesheet" href="style.css">
 <body class="bg-gray-100">
 
-    <header class="bg-[#d97706] shadow-md p-4 sticky top-0 z-50">
+    <header class="bg-gradient-to-r from-[#d97706] to-[#ea580c] shadow-lg p-4 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto flex justify-center items-center">
-            <div class="h-10 md:h-16">
-                <img src="https://i.postimg.cc/8kRqNLT0/logo.gif" alt="Logo" class="h-full w-auto">
+            <div class="h-10 md:h-14">
+                <img src="https://i.postimg.cc/8kRqNLT0/logo.gif" alt="Logo" class="h-full w-auto drop-shadow-md">
             </div>
         </div>
     </header>
 
-    <main id="product-page" class="max-w-6xl mx-auto mt-8 p-4 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white shadow-2xl rounded-3xl mb-12 border border-gray-100">
+    <!-- صفحة الطلب -->
+    <main id="product-page" class="max-w-6xl mx-auto mt-8 p-4 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white shadow-xl rounded-3xl mb-12 border border-gray-100 fade-in">
         <div class="space-y-6 text-right">
-            <div class="overflow-hidden rounded-2xl border bg-gray-50 flex items-center justify-center p-4 h-[400px]">
+            <div class="overflow-hidden rounded-2xl border-2 border-gray-100 bg-gray-50 flex items-center justify-center p-4 h-[400px] shadow-inner">
                 <img id="mainImage" src="https://i.postimg.cc/66Yvc7SL/inwi.png" alt="Main" class="max-w-full max-h-full object-contain transition-opacity duration-300">
             </div>
-            <h3 class="font-bold text-gray-800 text-center">اختر مزود الخدمة:</h3>
+            <h3 class="font-bold text-gray-800 text-center text-lg">اختر مزود الخدمة:</h3>
             <div class="grid grid-cols-3 gap-4">
                 <div class="logo-selector flex justify-center items-center h-20" onclick="changeProvider('IAM', 'https://i.postimg.cc/2j2ZGqJd/iam.png', this)">
                     <img src="https://i.postimg.cc/2j2ZGqJd/iam.png" class="max-h-full">
@@ -55,120 +66,158 @@
         </div>
 
         <div class="text-right">
-            <h1 class="text-3xl font-black mb-1 text-gray-900">تعبئة الرصيد</h1>
-            <p id="display-price-usd" class="text-orange-600 text-4xl font-black mb-8">$ 0.70</p>
+            <h1 class="text-3xl font-black mb-2 text-gray-900">تعبئة الرصيد السريعة</h1>
+            <p id="display-price-usd" class="text-orange-600 text-4xl font-black mb-8 bg-orange-50 inline-block px-4 py-2 rounded-xl border border-orange-100">$ 0.70</p>
 
-            <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2">
+            <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2 text-lg">
                 <span class="w-2 h-6 bg-orange-500 rounded-full"></span> اختر قيمة التعبئة :
             </h3>
             
             <div class="grid grid-cols-4 gap-3 mb-8">
-                <div class="provider-card active rounded-xl border-2 h-20" onclick="selectType(this, '5 درهم', '0.7')">
+                <div class="provider-card active rounded-xl h-20" onclick="selectType(this, '5 درهم', '0.7')">
                     <img src="https://i.postimg.cc/Sxy3fpLY/Screenshot_2026_02_18_012120.png" class="provider-logo">
                     <div class="img-label">5 درهم</div>
                 </div>
-                <div class="provider-card rounded-xl border-2 h-20" onclick="selectType(this, '10 درهم', '1.32')">
+                <div class="provider-card rounded-xl h-20" onclick="selectType(this, '10 درهم', '1.32')">
                     <img src="https://i.postimg.cc/rw83NLGW/Screenshot_2026_02_18_012149.png" class="provider-logo">
                     <div class="img-label">10 درهم</div>
                 </div>
-                <div class="provider-card rounded-xl border-2 h-20" onclick="selectType(this, '20 درهم', '2.42')">
+                <div class="provider-card rounded-xl h-20" onclick="selectType(this, '20 درهم', '2.42')">
                     <img src="https://i.postimg.cc/Z5T2xhP6/Screenshot_2026_02_18_012208.png" class="provider-logo">
                     <div class="img-label">20 درهم</div>
                 </div>
-                <div class="provider-card rounded-xl border-2 h-20" onclick="selectType(this, '30 درهم', '3.50')">
+                <div class="provider-card rounded-xl h-20" onclick="selectType(this, '30 درهم', '3.50')">
                     <img src="https://i.postimg.cc/HkpR9C0Q/Screenshot_2026_02_18_012238.png" class="provider-logo">
                     <div class="img-label">30 درهم</div>
                 </div>
-                <div class="provider-card rounded-xl border-2 h-20" onclick="selectType(this, '50 درهم', '5.90')">
+                <div class="provider-card rounded-xl h-20" onclick="selectType(this, '50 درهم', '5.90')">
                     <img src="https://i.postimg.cc/Z5T2xhPf/Screenshot_2026_02_18_012305.png" class="provider-logo">
                     <div class="img-label">50 درهم</div>
                 </div>
-                <div class="provider-card rounded-xl border-2 h-20" onclick="selectType(this, '100 درهم', '11.77')">
+                <div class="provider-card rounded-xl h-20" onclick="selectType(this, '100 درهم', '11.77')">
                     <img src="https://i.postimg.cc/52xTSM57/Screenshot_2026_02_18_012346.png" class="provider-logo">
                     <div class="img-label">100 درهم</div>
                 </div>
-                <div class="provider-card rounded-xl border-2 h-20" onclick="selectType(this, '200 درهم', '23.55')">
+                <div class="provider-card rounded-xl h-20" onclick="selectType(this, '200 درهم', '23.55')">
                     <img src="https://i.postimg.cc/Z5T2xhPs/Screenshot_2026_02_18_012409.png" class="provider-logo">
                     <div class="img-label">200 درهم</div>
                 </div>
-                <div class="provider-card rounded-xl border-2 h-20" onclick="selectType(this, '500 درهم', '57.95')">
+                <div class="provider-card rounded-xl h-20" onclick="selectType(this, '500 درهم', '57.95')">
                     <img src="https://i.postimg.cc/vZQktd7K/Screenshot_2026_02_18_012429.png" class="provider-logo">
                     <div class="img-label">500 درهم</div>
                 </div>
             </div>
 
-            <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2">
+            <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2 text-lg">
                 <span class="w-2 h-6 bg-orange-500 rounded-full"></span> اختيار الرمز :
             </h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
                 <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة عادية</button>
-                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة 1*</button>
-                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة 2*</button>
+                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة *1</button>
+                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة *2</button>
                 <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة *3</button>
-                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة 4*</button>
-                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة 5*</button>
-                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة 6*</button>
-                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة 9*</button>
+                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة *4</button>
+                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة *5</button>
+                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة *6</button>
+                <button onclick="selectCode(this)" class="price-btn py-3 px-1 text-sm rounded-xl font-bold">تعبئة *9</button>
             </div>
 
-            <div class="border-2 border-dashed border-orange-200 p-6 rounded-3xl bg-orange-50/30 mb-8">
-                <h4 class="text-center font-bold mb-4 text-gray-800 underline underline-offset-8">معلومات المستفيد</h4>
+            <div class="border-2 border-dashed border-orange-200 p-6 rounded-3xl bg-orange-50/50 mb-8 transition-colors hover:bg-orange-50">
+                <h4 class="text-center font-bold mb-5 text-gray-800 underline underline-offset-8 decoration-orange-400 decoration-2">معلومات المستفيد</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="fName" placeholder="الاسم الشخصي" class="p-3 border rounded-xl text-right outline-none">
-                    <input type="text" id="lName" placeholder="اسم العائلة" class="p-3 border rounded-xl text-right outline-none">
-                    <input type="email" id="email" placeholder="البريد الإلكتروني" class="p-3 border rounded-xl text-right outline-none md:col-span-2">
+                    <input type="text" id="fName" placeholder="الاسم الشخصي" class="p-3 border-2 border-gray-200 rounded-xl text-right outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white">
+                    <input type="text" id="lName" placeholder="اسم العائلة" class="p-3 border-2 border-gray-200 rounded-xl text-right outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white">
+                    <input type="email" id="email" placeholder="البريد الإلكتروني" class="p-3 border-2 border-gray-200 rounded-xl text-right outline-none md:col-span-2 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white">
                 </div>
-                <input type="text" id="billInfo" placeholder="رقم الهاتف..." class="w-full mt-4 p-3 border rounded-xl text-right outline-none">
+                <input type="text" id="billInfo" placeholder="رقم الهاتف (الذي سيتم تعبئته)" class="w-full mt-4 p-4 border-2 border-gray-200 rounded-xl text-right outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white font-bold text-lg text-left" dir="ltr">
             </div>
 
-            <button onclick="goToCheckout()" class="w-full bg-red-600 text-white font-black py-5 rounded-2xl hover:bg-red-700 shadow-xl transition-all text-xl">
-                إتمام الدفع الآن
+            <button onclick="goToCheckout()" class="w-full bg-gradient-to-r from-red-600 to-red-500 text-white font-black py-5 rounded-2xl hover:from-red-700 hover:to-red-600 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 text-xl flex justify-center items-center gap-3">
+                <span>إتمام الدفع الآن</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </button>
         </div>
     </main>
 
+    <!-- صفحة الدفع -->
     <main id="checkout-page" class="max-w-5xl mx-auto mt-8 mb-12 p-4">
-        <div class="dashed-container p-6 md:p-10 shadow-sm bg-white">
+        <div class="dashed-container p-6 md:p-10 shadow-lg bg-white">
+            <h2 class="text-3xl font-black text-center mb-8 text-gray-800">إتمام عملية الدفع</h2>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-right">
-                <div class="lg:col-span-1">
-                    <div class="border rounded-xl p-6 bg-white space-y-4 shadow-sm">
-                        <h3 class="text-gray-800 text-lg font-bold border-b pb-2 mb-4">ملخص الطلب</h3>
-                        <div class="space-y-4">
-                            <div class="flex justify-between items-center"><span class="text-gray-500">المزود:</span><span id="res-provider-name" class="font-bold">Inwi</span></div>
-                            <div class="flex justify-between items-center"><span class="text-gray-500">قيمة التعبئة:</span><span id="res-amount" class="font-bold">--</span></div>
-                            <div class="flex justify-between items-center"><span class="text-gray-500">الرمز:</span><span id="res-code" class="font-bold">--</span></div>
-                            <div class="flex justify-between items-center border-t pt-4 font-bold text-lg">
+                
+                <!-- ملخص الطلب -->
+                <div class="lg:col-span-1 order-2 lg:order-1">
+                    <div class="border-2 border-gray-100 rounded-2xl p-6 bg-gray-50 space-y-4 shadow-sm">
+                        <h3 class="text-gray-800 text-xl font-bold border-b-2 border-gray-200 pb-3 mb-4 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                            ملخص الطلب
+                        </h3>
+                        <div class="space-y-4 text-lg">
+                            <div class="flex justify-between items-center"><span class="text-gray-500">المزود:</span><span id="res-provider-name" class="font-bold text-gray-800">Inwi</span></div>
+                            <div class="flex justify-between items-center"><span class="text-gray-500">قيمة التعبئة:</span><span id="res-amount" class="font-bold text-gray-800">--</span></div>
+                            <div class="flex justify-between items-center"><span class="text-gray-500">الرمز:</span><span id="res-code" class="font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded">--</span></div>
+                            <div class="flex justify-between items-center border-t-2 border-gray-200 pt-4 font-black text-xl">
                                 <span>المبلغ المطلوب:</span>
-                                <span id="res-price-usd" class="text-orange-600 text-2xl">$ --</span>
+                                <span id="res-price-usd" class="text-red-600 text-3xl">$ --</span>
                             </div>
                         </div>
-                        <button onclick="goBack()" class="w-full text-xs text-gray-400 mt-4 underline text-center">تعديل الطلب</button>
+                        <button onclick="goBack()" class="w-full text-sm text-gray-500 hover:text-orange-600 mt-6 font-bold transition-colors flex justify-center items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" /></svg>
+                            العودة لتعديل الطلب
+                        </button>
                     </div>
                 </div>
 
-                <div class="lg:col-span-2 space-y-4">
-                    <div class="payment-option active rounded-xl p-1 overflow-hidden border-2" onclick="selectPay(this)">
-                        <div class="bg-orange-50 p-3 flex justify-between items-center">
-                            <input type="radio" name="pay" id="p1" checked>
-                            <label for="p1" class="font-bold text-orange-800">BINANCE PAY</label>
+                <!-- خيارات الدفع -->
+                <div class="lg:col-span-2 order-1 lg:order-2 space-y-4">
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">اختر طريقة الدفع:</h3>
+                    
+                    <div class="payment-option active rounded-xl p-1 overflow-hidden" onclick="selectPay(this, 'binance')">
+                        <div class="bg-orange-50 p-4 flex items-center gap-3">
+                            <input type="radio" name="pay" id="p1" class="w-5 h-5 accent-orange-600" checked>
+                            <label for="p1" class="font-black text-orange-800 text-lg cursor-pointer w-full flex items-center gap-2">
+                                <img src="https://cryptologos.cc/logos/bnb-bnb-logo.svg?v=026" class="w-6 h-6"> BINANCE PAY
+                            </label>
                         </div>
-                        <div class="p-4 bg-white text-sm space-y-3">
-                            <p>قم بإرسال USDT إلى هذا الحساب [ 120694333 ]</p>
-                            <textarea id="txnId" placeholder="ID المعاملة..." class="w-full border rounded-lg p-3 h-20 text-right outline-none"></textarea>
+                        
+                        <!-- صندوق معلومات الدفع والنسخ -->
+                        <div id="binance-info" class="p-5 bg-white border-t border-orange-100">
+                            <p class="text-gray-600 font-semibold mb-3">يرجى إرسال المبلغ المطلوب إلى مُعرف Binance Pay التالي:</p>
+                            
+                            <!-- صندوق النسخ المحسن -->
+                            <div class="flex items-center justify-between bg-gray-50 border-2 border-gray-200 rounded-xl p-2 pl-3 transition-colors hover:border-orange-300">
+                                <span id="pay-id" class="font-mono text-2xl font-black text-gray-800 tracking-wider w-full text-center" dir="ltr">120694333</span>
+                                <button onclick="copyToClipboard('pay-id', this, event)" class="bg-white border-2 border-gray-200 text-gray-700 hover:border-orange-500 hover:text-orange-600 hover:bg-orange-50 px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 shadow-sm whitespace-nowrap">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    <span class="btn-text">نسخ الرقم</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="payment-option rounded-xl p-4 flex justify-between items-center border" onclick="selectPay(this)">
-                        <input type="radio" name="pay" id="p2">
-                        <label for="p2" class="font-bold">USDT (TRC20)</label>
-                    </div>
-                    <div class="payment-option rounded-xl p-4 flex justify-between items-center border" onclick="selectPay(this)">
-                        <input type="radio" name="pay" id="p3">
-                        <label for="p3" class="font-bold">TRX (TRC20)</label>
+                    <div class="payment-option rounded-xl p-4 flex items-center gap-3" onclick="selectPay(this, 'usdt')">
+                        <input type="radio" name="pay" id="p2" class="w-5 h-5 accent-orange-600">
+                        <label for="p2" class="font-bold text-lg cursor-pointer w-full flex items-center gap-2">
+                            <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg?v=026" class="w-6 h-6"> USDT (TRC20)
+                        </label>
                     </div>
                     
-                    <button id="finalBtn" onclick="finishAll()" class="w-full bg-orange-500 text-white font-black py-4 rounded-xl text-xl mt-6 transition-transform active:scale-95">
-                        تأكيد عملية الدفع
+                    <div class="payment-option rounded-xl p-4 flex items-center gap-3" onclick="selectPay(this, 'trx')">
+                        <input type="radio" name="pay" id="p3" class="w-5 h-5 accent-orange-600">
+                        <label for="p3" class="font-bold text-lg cursor-pointer w-full flex items-center gap-2">
+                            <img src="https://cryptologos.cc/logos/tron-trx-logo.svg?v=026" class="w-6 h-6"> TRX (TRC20)
+                        </label>
+                    </div>
+                    
+                    <!-- حقل تأكيد المعاملة (موحد لجميع طرق الدفع) -->
+                    <div class="mt-6 bg-gray-50 border-2 border-dashed border-gray-300 p-5 rounded-2xl">
+                        <label class="block font-bold text-gray-800 mb-2">تأكيد الدفع:</label>
+                        <p class="text-sm text-gray-500 mb-3">بعد إتمام التحويل، يرجى لصق رقم المعاملة (Transaction ID / TxID) هنا لتأكيد طلبك.</p>
+                        <textarea id="txnId" placeholder="الصق ID المعاملة هنا..." class="w-full border-2 border-gray-200 rounded-xl p-4 h-24 text-left outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all font-mono" dir="ltr"></textarea>
+                    </div>
+                    
+                    <button id="finalBtn" onclick="finishAll()" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-black py-4 rounded-xl text-xl mt-4 shadow-lg hover:shadow-xl hover:from-orange-600 hover:to-orange-700 transition-all transform active:scale-95">
+                        تأكيد وإرسال الطلب
                     </button>
                 </div>
             </div>
@@ -197,13 +246,11 @@
             selectedProvider = name;
         }
 
-        // دالة اختيار القيمة مع تحديث السعر بالدولار
         function selectType(e, mad, usd) { 
             document.querySelectorAll('.provider-card').forEach(c => c.classList.remove('active')); 
             e.classList.add('active'); 
             selectedPriceMAD = mad;
             selectedPriceUSD = usd;
-            // تحديث الرقم في الصفحة الرئيسية
             document.getElementById('display-price-usd').innerText = "$ " + usd;
         }
 
@@ -213,39 +260,95 @@
             selectedCode = b.innerText; 
         }
 
-        function selectPay(e) {
-            document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active', 'border-orange-500', 'border-2'));
-            e.classList.add('active', 'border-orange-500', 'border-2');
+        // تحسين اختيار طريقة الدفع
+        function selectPay(e, type) {
+            document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
+            e.classList.add('active');
             e.querySelector('input').checked = true;
+            
+            // يمكن مستقبلاً تغيير العنوان بناءً على طريقة الدفع
+            // حالياً الصندوق الخاص بالنسخ موجود فقط في بينانس لتوضيح الفكرة، 
+            // ولكن نقلنا الـ textarea لتكون عامة وتعمل مع جميع الخيارات.
+        }
+
+        // دالة النسخ مع التأثير البصري
+        function copyToClipboard(elementId, btnElement, event) {
+            event.stopPropagation(); // لمنع تفعيل زر الراديو عند النقر على النسخ
+            const textToCopy = document.getElementById(elementId).innerText;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const textSpan = btnElement.querySelector('.btn-text');
+                const originalText = textSpan.innerText;
+                
+                // تغيير الشكل إلى اللون الأخضر دلالة على النجاح
+                btnElement.classList.replace('border-gray-200', 'border-green-500');
+                btnElement.classList.replace('text-gray-700', 'text-green-600');
+                btnElement.classList.replace('hover:border-orange-500', 'hover:border-green-600');
+                textSpan.innerText = "تم النسخ ✔";
+                
+                setTimeout(() => {
+                    // إعادة الزر لشكله الطبيعي
+                    btnElement.classList.replace('border-green-500', 'border-gray-200');
+                    btnElement.classList.replace('text-green-600', 'text-gray-700');
+                    btnElement.classList.replace('hover:border-green-600', 'hover:border-orange-500');
+                    textSpan.innerText = originalText;
+                }, 2000);
+            }).catch(err => {
+                alert('فشل النسخ، يرجى النسخ يدوياً');
+            });
         }
 
         function goToCheckout() {
-            if(!selectedCode) { alert("يرجى اختيار رمز التعبئة أولاً"); return; }
+            if(!selectedCode) { alert("يرجى اختيار رمز التعبئة أولاً (مثال: تعبئة عادية، *6 ...)"); return; }
             if(!document.getElementById('fName').value || !document.getElementById('billInfo').value) {
-                alert("يرجى ملء المعلومات المطلوبة.");
+                alert("يرجى ملء المعلومات المطلوبة (الاسم ورقم الهاتف المستفيد).");
                 return;
             }
             document.getElementById('res-provider-name').innerText = selectedProvider;
             document.getElementById('res-amount').innerText = selectedPriceMAD;
             document.getElementById('res-code').innerText = selectedCode;
-            // عرض السعر النهائي بالدولار في صفحة الدفع
             document.getElementById('res-price-usd').innerText = "$ " + selectedPriceUSD;
 
-            document.getElementById('product-page').style.display = 'none';
-            document.getElementById('checkout-page').style.display = 'block';
-            window.scrollTo(0,0);
+            const productPage = document.getElementById('product-page');
+            const checkoutPage = document.getElementById('checkout-page');
+            
+            productPage.style.display = 'none';
+            checkoutPage.style.display = 'block';
+            
+            // إعادة تشغيل الأنيميشن
+            checkoutPage.classList.remove('fade-in');
+            void checkoutPage.offsetWidth; 
+            checkoutPage.classList.add('fade-in');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function goBack() { document.getElementById('product-page').style.display = 'grid'; document.getElementById('checkout-page').style.display = 'none'; }
+        function goBack() { 
+            const productPage = document.getElementById('product-page');
+            const checkoutPage = document.getElementById('checkout-page');
+            
+            checkoutPage.style.display = 'none'; 
+            productPage.style.display = 'grid'; 
+            
+            productPage.classList.remove('fade-in');
+            void productPage.offsetWidth;
+            productPage.classList.add('fade-in');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         async function finishAll() {
             const btn = document.getElementById('finalBtn');
-            const txn = document.getElementById('txnId').value;
-            const payMethod = document.querySelector('input[name="pay"]:checked').parentElement.innerText.trim();
+            const txn = document.getElementById('txnId').value.trim();
+            const payMethod = document.querySelector('input[name="pay"]:checked').nextElementSibling.innerText.trim();
 
-            if(!txn && document.getElementById('p1').checked) { alert("يرجى إدخال معرف المعاملة"); return; }
+            if(!txn) { 
+                alert("يرجى إدخال معرف المعاملة (TxID) لتأكيد عملية الدفع الخاص بك."); 
+                document.getElementById('txnId').focus();
+                return; 
+            }
 
-            btn.innerText = "جاري الإرسال...";
+            btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> جاري الإرسال...`;
             btn.disabled = true;
 
             const dataToInsert = {
@@ -262,13 +365,13 @@
             try {
                 const { error } = await _supabase.from('orders').insert([dataToInsert]);
                 if (error) throw error;
-                alert("تم إرسال طلبك بنجاح!");
+                alert("تم استلام طلبك بنجاح! سيتم تنفيذ التعبئة قريباً.");
                 location.reload();
             } catch (err) {
-                alert("حدث خطأ أثناء الإرسال.");
+                alert("حدث خطأ أثناء الإرسال. تأكد من اتصالك بالإنترنت.");
             } finally {
                 btn.disabled = false;
-                btn.innerText = "تأكيد عملية الدفع";
+                btn.innerText = "تأكيد وإرسال الطلب";
             }
         }
     </script>

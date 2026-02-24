@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>خدمات السوشيال ميديا - ServiceTech</title>
+    
+    <!-- خط Cairo الفاخر -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+    <!-- استدعاء ملف الـ CSS الموحد الذي صنعناه سابقاً -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* تنسيقات خاصة بلوحة السوشيال ميديا */
+        .smm-panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background-color: rgba(0,0,0,0.2);
+            color: var(--text-main);
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group select:focus, .form-group input:focus {
+            border-color: #8E2DE2;
+            box-shadow: 0 0 0 3px rgba(142, 45, 226, 0.2);
+            outline: none;
+        }
+
+        .price-display {
+            background: rgba(142, 45, 226, 0.1);
+            border: 1px dashed #8E2DE2;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .price-display h3 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .price-display .amount {
+            font-size: 36px;
+            font-weight: 900;
+            color: #F80759;
+            text-shadow: 0 2px 10px rgba(248, 7, 89, 0.3);
+            margin: 10px 0;
+        }
+
+        .service-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.02);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        /* تنسيق أيقونات المنصات */
+        .platform-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر (متطابق مع باقي الصفحات) -->
+    <div class="main-bar">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px;">
+            <a href="index.html">
+                <img src="https://i.postimg.cc/BbXwGPpm/logo.png" alt="ServiceTech" style="max-width: 120px;">
+            </a>
+            <div class="header-list">
+                <a href="index.html" style="text-decoration: none; margin-left: 15px;">الرئيسية</a>
+            </div>
+        </div>
+    </div>
+
+    <main class="section" style="padding: 40px 20px;">
+        <div class="app-heading">
+            <h2>دعم السوشيال ميديا 🚀</h2>
+            <p class="heading-description">اختر المنصة والخدمة، وسنقوم ببدء التنفيذ فوراً!</p>
+        </div>
+
+        <div class="smm-panel">
+            <!-- اختيار المنصة (التصنيف) -->
+            <div class="form-group">
+                <label>📌 اختر المنصة (Category):</label>
+                <select id="categorySelect" onchange="loadServices()">
+                    <option value="" disabled selected>-- اختر المنصة --</option>
+                    <option value="instagram">📸 انستجرام (Instagram)</option>
+                    <option value="tiktok">🎵 تيك توك (TikTok)</option>
+                    <option value="youtube">▶️ يوتيوب (YouTube)</option>
+                    <option value="facebook">📘 فيسبوك (Facebook)</option>
+                </select>
+            </div>
+
+            <!-- اختيار الخدمة -->
+            <div class="form-group">
+                <label>💎 اختر الخدمة (Service):</label>
+                <select id="serviceSelect" onchange="updateServiceInfo()" disabled>
+                    <option value="" disabled selected>-- اختر المنصة أولاً --</option>
+                </select>
+                <div id="serviceDetails" class="service-desc" style="display: none;">
+                    الحد الأدنى: <span id="minQty">0</span> | الحد الأقصى: <span id="maxQty">0</span> | السعر لكل 1000: $<span id="ratePrice">0.00</span>
+                </div>
+            </div>
+
+            <!-- رابط الحساب/المنشور -->
+            <div class="form-group">
+                <label>🔗 الرابط (Link):</label>
+                <input type="url" id="orderLink" placeholder="ضع رابط الحساب أو المنشور هنا..." disabled>
+            </div>
+
+            <!-- الكمية -->
+            <div class="form-group">
+                <label>🔢 الكمية (Quantity):</label>
+                <input type="number" id="orderQty" placeholder="أدخل العدد المطلوب..." oninput="calculatePrice()" disabled>
+            </div>
+
+            <!-- عرض السعر الإجمالي -->
+            <div class="price-display">
+                <h3>إجمالي التكلفة</h3>
+                <div class="amount">$<span id="totalPrice">0.00</span></div>
+            </div>
+
+            <!-- زر الطلب -->
+            <button id="submitOrderBtn" class="button" onclick="submitOrder()" disabled>
+                تأكيد وإرسال الطلب ⚡
+            </button>
+        </div>
+    </main>
+
+    <!-- الفوتر -->
+    <footer>
+        <div style="text-align: center;">
+            <p>© 2026 ServiceTech - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <!-- سكربت التحكم في اللوحة -->
+    <script>
+        // 1. هنا نضع الخدمات. (في الوضع الحقيقي، يتم جلب هذه البيانات من قاعدة بياناتك)
+        // لقد قمت بوضع أمثلة تشبه خدمات منصات SMM لتكون جاهزة للعمل فوراً.
+        const smmServices = {
+            "instagram": [
+                { id: 101, name: "متابعين انستجرام - ضمان 30 يوم ⚡", rate: 0.80, min: 100, max: 100000 },
+                { id: 102, name: "لايكات انستجرام - سريعة جداً 🔥", rate: 0.15, min: 50, max: 50000 },
+                { id: 103, name: "مشاهدات ريلز انستجرام (Reels) 🎬", rate: 0.05, min: 100, max: 1000000 }
+            ],
+            "tiktok": [
+                { id: 201, name: "متابعين تيك توك - جودة عالية 🎵", rate: 1.20, min: 100, max: 50000 },
+                { id: 202, name: "مشاهدات تيك توك - فورية 🚀", rate: 0.01, min: 1000, max: 5000000 },
+                { id: 203, name: "لايكات تيك توك ❤️", rate: 0.50, min: 100, max: 20000 }
+            ],
+            "youtube": [
+                { id: 301, name: "مشاهدات يوتيوب - لا تسقط ▶️", rate: 2.50, min: 1000, max: 1000000 },
+                { id: 302, name: "مشتركين يوتيوب - حقيقيين 🔔", rate: 15.00, min: 100, max: 5000 }
+            ],
+            "facebook": [
+                { id: 401, name: "متابعين صفحة فيسبوك 📘", rate: 1.80, min: 100, max: 50000 }
+            ]
+        };
+
+        const categorySelect = document.getElementById('categorySelect');
+        const serviceSelect = document.getElementById('serviceSelect');
+        const orderLink = document.getElementById('orderLink');
+        const orderQty = document.getElementById('orderQty');
+        const submitBtn = document.getElementById('submitOrderBtn');
+        const serviceDetails = document.getElementById('serviceDetails');
+
+        let currentRate = 0;
+        let currentMin = 0;
+        let currentMax = 0;
+        let currentServiceId = 0;
+
+        // عند تغيير المنصة (الكاتيجوري)
+        function loadServices() {
+            const category = categorySelect.value;
+            serviceSelect.innerHTML = '<option value="" disabled selected>-- اختر الخدمة --</option>';
+            
+            if (category && smmServices[category]) {
+                smmServices[category].forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service.id;
+                    option.textContent = service.name;
+                    // تخزين بيانات الخدمة داخل الـ Option
+                    option.dataset.rate = service.rate;
+                    option.dataset.min = service.min;
+                    option.dataset.max = service.max;
+                    serviceSelect.appendChild(option);
+                });
+                serviceSelect.disabled = false;
+            }
+            
+            // تصفير الحقول
+            orderLink.disabled = true;
+            orderQty.disabled = true;
+            submitBtn.disabled = true;
+            serviceDetails.style.display = 'none';
+            document.getElementById('totalPrice').innerText = "0.00";
+            orderQty.value = "";
+        }
+
+        // عند اختيار الخدمة
+        function updateServiceInfo() {
+            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+            if (!selectedOption.value) return;
+
+            currentServiceId = selectedOption.value;
+            currentRate = parseFloat(selectedOption.dataset.rate);
+            currentMin = parseInt(selectedOption.dataset.min);
+            currentMax = parseInt(selectedOption.dataset.max);
+
+            // عرض تفاصيل الخدمة
+            document.getElementById('minQty').innerText = currentMin;
+            document.getElementById('maxQty').innerText = currentMax;
+            document.getElementById('ratePrice').innerText = currentRate.toFixed(2);
+            serviceDetails.style.display = 'block';
+
+            // تفعيل الحقول
+            orderLink.disabled = false;
+            orderQty.disabled = false;
+            submitBtn.disabled = false;
+
+            // تحديد الـ Min والـ Max للـ Input
+            orderQty.min = currentMin;
+            orderQty.max = currentMax;
+            
+            calculatePrice();
+        }
+
+        // حساب السعر التلقائي
+        function calculatePrice() {
+            let qty = parseInt(orderQty.value);
+            
+            if (isNaN(qty) || qty <= 0) {
+                document.getElementById('totalPrice').innerText = "0.00";
+                return;
+            }
+
+            // السعر في لوحات SMM يكون لكل 1000
+            let price = (qty / 1000) * currentRate;
+            
+            // إضافة هامش الربح الخاص بك (مثلاً تضرب السعر بـ 2 لتربح الضعف)
+            let myProfitMargin = 2.0; // يمكنك تغيير هذا الرقم
+            let finalPriceToCustomer = price * myProfitMargin;
+
+            document.getElementById('totalPrice').innerText = finalPriceToCustomer.toFixed(2);
+        }
+
+        // إرسال الطلب
+        function submitOrder() {
+            const link = orderLink.value.trim();
+            const qty = parseInt(orderQty.value);
+
+            if (!link) {
+                alert("يرجى إدخال الرابط الصحيح!");
+                orderLink.focus();
+                return;
+            }
+
+            if (isNaN(qty) || qty < currentMin || qty > currentMax) {
+                alert(`يرجى إدخال كمية صحيحة بين ${currentMin} و ${currentMax}`);
+                orderQty.focus();
+                return;
+            }
+
+            // هنا يتم إرسال البيانات (في حالتك ستستخدم Supabase مثل صفحات الشحن السابقة)
+            // سنقوم بتحويل المستخدم لصفحة دفع أو تسجيل الطلب في قاعدة البيانات.
+            
+            const finalPrice = document.getElementById('totalPrice').innerText;
+            const serviceName = serviceSelect.options[serviceSelect.selectedIndex].text;
+
+            // إرسال تنبيه وهمي للنجاح
+            submitBtn.innerHTML = "جاري الإرسال... ⏳";
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                alert(`تم تجهيز الطلب:\nالخدمة: ${serviceName}\nالرابط: ${link}\nالكمية: ${qty}\nالتكلفة: $${finalPrice}\n\nيجب توجيه العميل الآن لصفحة الدفع (Checkout).`);
+                
+                submitBtn.innerHTML = "تأكيد وإرسال الطلب ⚡";
+                submitBtn.disabled = false;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

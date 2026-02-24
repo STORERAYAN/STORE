@@ -1,0 +1,296 @@
+/* ==========================================================================
+   1. المتغيرات (CSS Variables) - الألوان والخطوط الأساسية
+   ========================================================================== */
+   :root {
+    --bg-body: #0B0E14; /* لون الخلفية الكحلي الداكن */
+    --bg-card: #151A23; /* خلفية البطاقات (أفتح قليلاً) */
+    --bg-glass: rgba(11, 14, 20, 0.75); /* شفافية الهيدر */
+    
+    --text-main: #FFFFFF; /* النص الأساسي أبيض */
+    --text-muted: #8B949E; /* النص الثانوي رمادي */
+    
+    --gradient-primary: linear-gradient(135deg, #8E2DE2, #F80759); /* تدرج النيون */
+    --gradient-glow: 0 8px 32px rgba(142, 45, 226, 0.3); /* توهج الأزرار */
+    
+    --border-color: #2D3748;
+    --border-hover: #8E2DE2;
+    
+    --success-color: #00C853;
+    --danger-color: #F80759;
+}
+
+/* ==========================================================================
+   2. الإعدادات العامة (Base Styles)
+   ========================================================================== */
+body {
+    font-family: 'Cairo', sans-serif !important;
+    background-color: var(--bg-body) !important;
+    color: var(--text-main) !important;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* شريط التمرير (Scrollbar) */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-body); }
+::-webkit-scrollbar-thumb { background: var(--gradient-primary); border-radius: 10px; }
+
+/* إخفاء الخلفيات البيضاء الافتراضية للسكاشن */
+.section, div[class^="section-"], main {
+    background-color: transparent !important;
+    color: var(--text-main) !important;
+}
+
+/* ==========================================================================
+   3. الهيدر وشريط الإشعارات (Header & Notice Bar)
+   ========================================================================== */
+.notice-bar {
+    background: var(--gradient-primary) !important;
+    border: none !important;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    padding: 8px 0 !important;
+}
+
+.main-bar {
+    background-color: var(--bg-glass) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
+.header-list a {
+    color: var(--text-main) !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.header-list a:hover {
+    color: var(--danger-color) !important;
+}
+
+.header-switcher i, .yc-search, .yc-menu {
+    color: var(--text-main) !important;
+}
+
+/* ==========================================================================
+   4. العناوين والنصوص (Typography)
+   ========================================================================== */
+.app-heading h2, h1.text-3xl {
+    font-size: 38px !important;
+    font-weight: 900 !important;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin: 20px 0 !important;
+    text-shadow: 0 4px 20px rgba(142, 45, 226, 0.2);
+}
+
+.heading-description {
+    color: var(--text-muted) !important;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   5. البطاقات والمنتجات (Cards & Products)
+   ========================================================================== */
+.product-item, .category-item, .product-item .product-details, .provider-card {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+
+/* تأثير التوهج عند لمس البطاقة */
+.product-item:hover, .category-item:hover, .provider-card:hover {
+    transform: translateY(-8px) !important;
+    border-color: var(--border-hover) !important;
+    box-shadow: 0 15px 35px rgba(142, 45, 226, 0.25) !important;
+}
+
+.provider-card.active {
+    border-color: var(--border-hover) !important;
+    background-color: rgba(142, 45, 226, 0.05) !important;
+    box-shadow: var(--gradient-glow) !important;
+    transform: scale(1.02);
+}
+
+.product-thumbnail img, .category-thumbnail img {
+    border-radius: 18px 18px 0 0 !important;
+    transition: transform 0.6s ease !important;
+}
+
+.product-item:hover .product-thumbnail img {
+    transform: scale(1.05) !important;
+}
+
+.product-title a, .category-title {
+    color: var(--text-main) !important;
+    font-weight: 800 !important;
+    transition: color 0.3s ease;
+}
+
+.product-title a:hover {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.product-price .after, #displayPrice, .display-price-usd {
+    color: var(--danger-color) !important;
+    font-weight: 900 !important;
+    font-size: 20px;
+}
+
+/* ==========================================================================
+   6. الأزرار (Buttons)
+   ========================================================================== */
+.product-actions .button, #finalBtn, button[onclick^="goToCheckout"] {
+    background: var(--gradient-primary) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    font-size: 16px !important;
+    padding: 12px 20px;
+    width: 100%;
+    transition: all 0.3s ease !important;
+    box-shadow: var(--gradient-glow) !important;
+    cursor: pointer;
+}
+
+.product-actions .button:hover, #finalBtn:hover, button[onclick^="goToCheckout"]:hover {
+    transform: scale(1.03) !important;
+    filter: brightness(1.2);
+    box-shadow: 0 12px 40px rgba(248, 7, 89, 0.4) !important;
+}
+
+/* أزرار تحديد الأسعار (في صفحات الشحن) */
+.price-btn {
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-main);
+    text-align: center;
+    cursor: pointer;
+}
+
+.price-btn:hover {
+    border-color: var(--border-hover);
+    color: #F80759;
+    transform: translateY(-3px);
+}
+
+.price-btn.active {
+    background: var(--gradient-primary) !important;
+    color: white !important;
+    border-color: transparent !important;
+    box-shadow: var(--gradient-glow);
+    transform: scale(1.03);
+}
+
+/* ==========================================================================
+   7. الحقول والنماذج (Inputs & Forms)
+   ========================================================================== */
+input[type=email], input[type=number], input[type=password], input[type=search], 
+input[type=tel], input[type=text], input[type=url], textarea {
+    border-radius: 12px !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 12px 15px !important;
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    outline: none !important;
+    transition: all 0.3s ease !important;
+}
+
+input:focus, textarea:focus {
+    border-color: var(--border-hover) !important;
+    box-shadow: 0 0 0 3px rgba(142, 45, 226, 0.2) !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* ==========================================================================
+   8. خيارات الدفع (Payment Options)
+   ========================================================================== */
+.payment-option {
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    cursor: pointer;
+    border-radius: 15px;
+}
+
+.payment-option:hover {
+    border-color: var(--border-hover);
+    background-color: rgba(142, 45, 226, 0.05);
+}
+
+.payment-option.active {
+    border-color: var(--border-hover);
+    background-color: rgba(142, 45, 226, 0.1);
+    box-shadow: var(--gradient-glow);
+}
+
+.dashed-container {
+    border: 2px dashed var(--border-hover);
+    border-radius: 20px;
+    background: var(--bg-card);
+}
+
+/* ==========================================================================
+   9. شريط البحث (Search Bar)
+   ========================================================================== */
+.search-form { background: transparent !important; }
+.search-form .container { 
+    background-color: var(--bg-card); 
+    border: 1px solid var(--border-color); 
+    border-radius: 50px; 
+}
+.search-select select { 
+    background: transparent !important; 
+    color: var(--text-main) !important; 
+    border: none !important; 
+}
+.search-submit i { color: #8E2DE2 !important; }
+
+/* ==========================================================================
+   10. الفوتر (Footer)
+   ========================================================================== */
+.footer, footer {
+    background-color: var(--bg-card) !important;
+    border-top: 1px solid var(--border-color) !important;
+    color: var(--text-muted) !important;
+    padding: 30px 0;
+}
+
+/* ==========================================================================
+   11. الحركات (Animations)
+   ========================================================================== */
+.fade-in { animation: fadeIn 0.5s ease-out forwards; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.marquee-instant-container { width: 100%; overflow: hidden; white-space: nowrap; direction: ltr; box-sizing: border-box; }
+.marquee-instant-text { display: inline-block; direction: rtl; animation: scroll-ltr 20s linear infinite; will-change: transform; }
+@keyframes scroll-ltr { 0% { transform: translateX(-100%); } 100% { transform: translateX(100vw); } }
+
+/* أزرار الكمية + و - */
+.qty-btn { background: transparent; color: var(--text-main); border: none; }
+.qty-btn:hover { color: var(--danger-color); }
