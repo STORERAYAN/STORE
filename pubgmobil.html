@@ -3,180 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شحن لعبة ببجي موبايل – (MENA)</title>
+    <title>شحن لعبة ببجي موبايل– (MENA)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; background-color: #f4f7f6; }
-        
-        /* تأثيرات أزرار الأسعار */
-        .price-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid #e2e8f0; background: white; text-align: center; }
-        .price-btn:hover { border-color: #fb923c; color: #ea580c; background-color: #fffaf0; transform: translateY(-3px); box-shadow: 0 4px 6px -1px rgba(234, 88, 12, 0.1); }
-        .price-btn.active { background-color: #ea580c !important; color: white !important; border-color: #ea580c; transform: scale(1.03); box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2); }
-        
-        .dashed-container { border: 2px dashed #fb923c; border-radius: 20px; background: white; }
-        
-        /* خيارات الدفع */
-        .payment-option { transition: all 0.3s ease; border: 2px solid #e2e8f0; cursor: pointer; }
-        .payment-option:hover { border-color: #fdba74; }
-        .payment-option.active { border-color: #ea580c; background-color: #fffaf0; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.1); }
-        
-        .qty-btn { transition: all 0.2s; }
-        .qty-btn:hover { background-color: #f3f4f6; color: #ea580c; }
-        .qty-btn:active { transform: scale(0.95); }
-
+        .price-btn { transition: all 0.2s ease; border: 1px solid #e2e8f0; background: white; text-align: center; }
+        .price-btn:hover { border-color: #ff4500; color: #ff4500; background-color: #fffaf0; }
+        .price-btn.active { background-color: #ff4500 !important; color: white !important; border-color: #ff4500; }
+        .dashed-container { border: 2px dashed #ffb800; border-radius: 20px; background: white; }
+        .payment-option { transition: all 0.3s ease; border: 1px solid #e2e8f0; cursor: pointer; }
+        .payment-option.active { border-color: #ffb800; background-color: #fffdf5; border-width: 2px; }
         #checkout-page { display: none; }
-
-        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
 <body class="bg-gray-100">
 
-    <header class="bg-gradient-to-r from-[#d97706] to-[#ea580c] shadow-lg p-4 sticky top-0 z-50">
+    <header class="bg-[#d97706] shadow-md p-4 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto flex justify-center items-center">
-            <div class="h-10 md:h-14">
-                <img src="https://i.postimg.cc/8kRqNLT0/logo.gif" alt="Logo" class="h-full w-auto drop-shadow-md">
+            <div class="h-10 md:h-16">
+                <img src="https://i.postimg.cc/8kRqNLT0/logo.gif" alt="Logo" class="h-full w-auto">
             </div>
         </div>
     </header>
-	<link rel="stylesheet" href="style.css">
 
-    <!-- صفحة الطلب -->
-    <main id="product-page" class="max-w-6xl mx-auto mt-8 p-4 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white shadow-xl rounded-3xl mb-12 border border-gray-100 fade-in">
-        
+    <main id="product-page" class="max-w-6xl mx-auto mt-8 p-4 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white shadow-2xl rounded-3xl mb-12 border border-gray-100">
         <div class="space-y-6 text-right">
-            <div class="overflow-hidden rounded-3xl border-2 border-gray-100 bg-gray-50 flex items-center justify-center p-4 h-[400px] shadow-inner">
-                <img id="mainImage" src="https://i.postimg.cc/htFP1cSZ/pubg.png" alt="PUBG MENA" class="max-w-full max-h-full object-contain transition-transform duration-500 hover:scale-105">
+            <div class="overflow-hidden rounded-2xl border bg-gray-50 flex items-center justify-center p-4 h-[400px]">
+                <img id="mainImage" src="https://i.postimg.cc/htFP1cSZ/pubg.png" alt="Free Fire MENA" class="max-w-full max-h-full object-contain transition-opacity duration-300">
             </div>
         </div>
 
         <div class="text-right">
-            <h1 class="text-3xl font-black mb-2 text-gray-900">شحن لعبة ببجي موبايل – (MENA)</h1>
-            <p id="displayPrice" class="text-orange-600 text-4xl font-black mb-8 bg-orange-50 inline-block px-4 py-2 rounded-xl border border-orange-100">اختر الحزمة</p>
+            <h1 class="text-3xl font-black mb-1 text-gray-900">شحن لعبة ببجي موبايل– (MENA)</h1>
+            <p id="displayPrice" class="text-orange-600 text-4xl font-black mb-8">اختر الحزمة</p>
 
-            <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2 text-lg">
-                <span class="w-2 h-6 bg-orange-500 rounded-full"></span> اختر الحزمة :
+            <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2">
+                <span class="w-2 h-6 bg-orange-500 rounded-full"></span> اختر الكمية :
             </h3>
             
-            <div class="grid grid-cols-2 md:grid-cols-2 gap-3 mb-8">
-                <button onclick="selectPrice(this, 1.10)" class="price-btn py-4 px-2 rounded-xl font-bold text-sm md:text-base">60 UC</button>
-                <button onclick="selectPrice(this, 5.45)" class="price-btn py-4 px-2 rounded-xl font-bold text-sm md:text-base">325 UC</button>
-                <button onclick="selectPrice(this, 10.50)" class="price-btn py-4 px-2 rounded-xl font-bold text-sm md:text-base">660 UC</button>
-                <button onclick="selectPrice(this, 25.60)" class="price-btn py-4 px-2 rounded-xl font-bold text-sm md:text-base">1800 UC</button>
-                <button onclick="selectPrice(this, 50.00)" class="price-btn py-4 px-2 rounded-xl font-bold text-sm md:text-base">3850 UC</button>
-                <button onclick="selectPrice(this, 99.00)" class="price-btn py-4 px-2 rounded-xl font-bold text-sm md:text-base">8100 UC</button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-8">
+                <button onclick="selectPrice(this, 1.10)" class="price-btn py-3 px-2 rounded-lg font-bold text-sm">60 UC</button>
+                <button onclick="selectPrice(this, 5.45)" class="price-btn py-3 px-2 rounded-lg font-bold text-sm">325 UC</button>
+                <button onclick="selectPrice(this, 10.50)" class="price-btn py-3 px-2 rounded-lg font-bold text-sm">660 UC</button>
+                <button onclick="selectPrice(this, 25.60)" class="price-btn py-3 px-2 rounded-lg font-bold text-sm">1800 UC</button>
+                <button onclick="selectPrice(this, 50.00)" class="price-btn py-3 px-2 rounded-lg font-bold text-sm">3850 UC</button>
+                <button onclick="selectPrice(this, 99.00)" class="price-btn py-3 px-2 rounded-lg font-bold text-sm">8100 UC</button>
             </div>
 
-            <div class="border-2 border-dashed border-orange-200 p-6 rounded-3xl bg-orange-50/50 mb-8 transition-colors hover:bg-orange-50">
-                <h4 class="text-center font-bold mb-5 text-gray-800 underline underline-offset-8 decoration-orange-400 decoration-2">معلومات الشحن</h4>
+            <div class="border-2 border-dashed border-orange-200 p-6 rounded-3xl bg-orange-50/30 mb-8">
+                <h4 class="text-center font-bold mb-4 text-gray-800 underline underline-offset-8">معلومات الشحن</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="fName" placeholder="الاسم الشخصي" class="p-3 border-2 border-gray-200 rounded-xl text-right outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white">
-                    <input type="text" id="lName" placeholder="اسم العائلة" class="p-3 border-2 border-gray-200 rounded-xl text-right outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white">
-                    <input type="email" id="email" placeholder="البريد الإلكتروني" class="p-3 border-2 border-gray-200 rounded-xl text-right outline-none md:col-span-2 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white">
+                    <input type="text" id="fName" placeholder="الاسم الشخصي" class="p-3 border rounded-xl text-right outline-none focus:border-orange-500">
+                    <input type="text" id="lName" placeholder="اسم العائلة" class="p-3 border rounded-xl text-right outline-none focus:border-orange-500">
+                    <input type="email" id="email" placeholder="البريد الإلكتروني" class="p-3 border rounded-xl text-right outline-none md:col-span-2 focus:border-orange-500">
                 </div>
-                <input type="text" id="billInfo" placeholder="أدخل معرف اللاعب (ID) الخاص بك هنا..." class="w-full mt-4 p-4 border-2 border-gray-200 rounded-xl text-left outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white font-bold text-lg tracking-widest placeholder:text-right" dir="ltr">
+                <input type="text" id="billInfo" placeholder="أدخل معرف اللاعب (ID) الخاص بك هنا..." class="w-full mt-4 p-3 border rounded-xl text-right outline-none focus:border-orange-500">
             </div>
 
             <div class="flex flex-col md:flex-row items-center gap-4">
-                <div class="flex items-center border-2 border-gray-200 rounded-2xl bg-white h-[60px] overflow-hidden shadow-sm w-full md:w-1/3">
-                    <button class="qty-btn w-1/3 h-full font-black text-2xl flex items-center justify-center border-l-2 border-gray-100 text-gray-600 cursor-pointer" onclick="stepUp()">+</button>
-                    <input id="qty" type="number" value="1" class="w-1/3 h-full text-center border-none font-black text-xl outline-none text-gray-800 bg-white" readonly>
-                    <button class="qty-btn w-1/3 h-full font-black text-2xl flex items-center justify-center border-r-2 border-gray-100 text-gray-600 cursor-pointer" onclick="stepDown()">-</button>
+                <div class="flex items-center border-2 border-gray-100 rounded-2xl bg-white h-[60px]">
+                    <button class="px-6 font-bold text-xl" onclick="stepUp()">+</button>
+                    <input id="qty" type="number" value="1" class="w-12 text-center border-none font-black text-xl" readonly>
+                    <button class="px-6 font-bold text-xl" onclick="stepDown()">-</button>
                 </div>
-                <button onclick="goToCheckout()" class="w-full md:w-2/3 bg-gradient-to-r from-red-600 to-red-500 text-white font-black py-4 h-[60px] rounded-2xl hover:from-red-700 hover:to-red-600 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 text-xl flex justify-center items-center gap-3">
-                    <span>إتمام الشحن الآن</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                <button onclick="goToCheckout()" class="w-full md:flex-1 bg-red-600 text-white font-black py-5 rounded-2xl hover:bg-red-700 shadow-xl transition-all text-xl">
+                    إتمام الشحن الآن
                 </button>
             </div>
         </div>
     </main>
 
-    <!-- صفحة الدفع -->
     <main id="checkout-page" class="max-w-5xl mx-auto mt-8 mb-12 p-4">
-        <div class="dashed-container p-6 md:p-10 shadow-lg bg-white">
-            <h2 class="text-3xl font-black text-center mb-8 text-gray-800">إتمام عملية الدفع</h2>
+        <div class="dashed-container p-6 md:p-10 shadow-sm bg-white">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-right">
-                
-                <!-- ملخص الطلب -->
-                <div class="lg:col-span-1 order-2 lg:order-1">
-                    <div class="border-2 border-gray-100 rounded-2xl p-6 bg-gray-50 space-y-4 shadow-sm">
-                        <h3 class="text-gray-800 text-xl font-bold border-b-2 border-gray-200 pb-3 mb-4 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                            ملخص الشحن
-                        </h3>
-                        <div class="space-y-4 text-lg">
-                            <div class="flex justify-between items-center"><span class="text-gray-500">الحزمة:</span><span id="res-qty" class="font-bold text-gray-800">--</span></div>
-                            <div class="flex justify-between items-center border-t-2 border-gray-200 pt-4 font-black text-xl">
-                                <span>المجموع:</span>
-                                <span id="res-price" class="text-red-600 text-3xl">--</span>
-                            </div>
+                <div class="lg:col-span-1">
+                    <div class="border rounded-xl p-6 bg-white space-y-4">
+                        <h3 class="text-gray-800 text-lg font-bold border-b pb-2 mb-4">ملخص الشحن</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center"><span class="text-gray-500">الحزمة:</span><span id="res-qty" class="font-bold">--</span></div>
+                            <div class="flex justify-between items-center border-t pt-4 font-bold text-lg"><span>المجموع:</span><span id="res-price" class="text-orange-600 text-2xl">--</span></div>
                         </div>
-                        <button onclick="goBack()" class="w-full text-sm text-gray-500 hover:text-orange-600 mt-6 font-bold transition-colors flex justify-center items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" /></svg>
-                            تغيير الحزمة أو الكمية
-                        </button>
+                        <button onclick="goBack()" class="w-full text-xs text-gray-400 mt-4 underline text-center block">تغيير الحزمة</button>
                     </div>
                 </div>
 
-                <!-- الدفع والإثبات -->
-                <div class="lg:col-span-2 order-1 lg:order-2 space-y-4">
-                    <h3 class="font-bold text-lg text-gray-800 mb-2">معلومات الدفع:</h3>
-                    
-                    <div class="payment-option active rounded-xl p-1 overflow-hidden">
-                        <div class="bg-orange-50 p-4 flex items-center gap-3">
-                            <input type="radio" name="pay" id="p1" class="w-5 h-5 accent-orange-600" checked readonly>
-                            <label for="p1" class="font-black text-orange-800 text-lg w-full flex items-center gap-2">
-                                <img src="https://cryptologos.cc/logos/bnb-bnb-logo.svg?v=026" class="w-6 h-6"> BINANCE PAY
-                            </label>
-                        </div>
-                        
-                        <div class="p-5 bg-white border-t border-orange-100">
-                            <p class="text-gray-600 font-semibold mb-3">يرجى إرسال المبلغ المطلوب إلى مُعرف Binance Pay التالي:</p>
-                            
-                            <!-- صندوق النسخ المحسن -->
-                            <div class="flex items-center justify-between bg-gray-50 border-2 border-gray-200 rounded-xl p-2 pl-3 transition-colors hover:border-orange-300 shadow-inner">
-                                <span id="pay-id" class="font-mono text-2xl font-black text-gray-800 tracking-wider w-full text-center" dir="ltr">120694333</span>
-                                <button type="button" onclick="copyToClipboard('pay-id', this, event)" class="bg-white border-2 border-gray-200 text-gray-700 hover:border-orange-500 hover:text-orange-600 hover:bg-orange-50 px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 shadow-sm whitespace-nowrap">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                    <span class="btn-text">نسخ الرقم</span>
-                                </button>
-                            </div>
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="payment-option active rounded-xl p-4 border-2 border-orange-400">
+                        <div class="flex justify-between items-center"><input type="radio" name="pay" id="p1" checked><label for="p1" class="font-bold text-orange-800">BINANCE PAY</label></div>
+                        <div class="mt-4 text-sm space-y-3">
+                            <p>قم بإرسال USDT إلى هذا الحساب [ 120694333 ]</p>
+                            <textarea id="txnId" placeholder="ID المعاملة..." class="w-full border rounded-lg p-3 h-24 text-right outline-none"></textarea>
                         </div>
                     </div>
-
-                    <!-- حقل تأكيد المعاملة ورفع الإثبات -->
-                    <div class="mt-6 bg-gray-50 border-2 border-dashed border-gray-300 p-5 rounded-2xl">
-                        <label class="block font-bold text-gray-800 mb-2">رقم المعاملة (TxID):</label>
-                        <textarea id="txnId" placeholder="الصق ID المعاملة هنا..." class="w-full border-2 border-gray-200 rounded-xl p-3 h-16 text-left outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all font-mono shadow-inner mb-4" dir="ltr"></textarea>
-                        
-                        <!-- رفع صورة الإثبات -->
-                        <label class="block font-bold text-gray-800 mb-2 mt-4">إرفاق صورة إيصال التحويل (اختياري/يُسرع العملية):</label>
-                        <div class="flex items-center justify-center w-full">
-                            <label for="proofImage" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-white hover:bg-gray-50 transition-all">
-                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <svg class="w-8 h-8 mb-3 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                    </svg>
-                                    <p class="mb-2 text-sm text-gray-500"><span class="font-bold">اضغط لرفع صورة</span> أو قم بسحب الصورة هنا</p>
-                                </div>
-                                <input id="proofImage" type="file" accept="image/*" class="hidden" onchange="previewImage(event)" />
-                            </label>
-                        </div>
-                        <!-- مكان عرض الصورة المصغرة بعد اختيارها -->
-                        <div id="imagePreviewContainer" class="hidden mt-4 text-center">
-                            <p class="text-sm text-green-600 font-bold mb-2">تم اختيار الصورة بنجاح:</p>
-                            <img id="imagePreview" class="max-h-40 rounded-lg mx-auto border-2 border-green-400 shadow-md">
-                        </div>
-                    </div>
-                    
-                    <button id="finalBtn" onclick="finishAll()" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-black py-4 rounded-xl text-xl mt-4 shadow-lg hover:shadow-xl hover:from-orange-600 hover:to-orange-700 transition-all transform active:scale-95">
-                        تأكيد عملية الدفع وإرسال الطلب
-                    </button>
+                    <button id="finalBtn" onclick="finishAll()" class="w-full bg-orange-500 text-white font-black py-4 rounded-xl text-xl mt-6">تأكيد عملية الدفع</button>
                 </div>
             </div>
         </div>
@@ -197,11 +118,10 @@
             selectedAmount = b.innerText;
             unitPrice = p;
             document.getElementById('displayPrice').innerText = "$ " + p.toFixed(2);
-            updateFinalPrice();
         }
 
         function stepUp() { let q = document.getElementById('qty'); q.value = parseInt(q.value) + 1; updateFinalPrice(); }
-        function stepDown() { let q = document.getElementById('qty'); if(q.value > 1) { q.value = parseInt(q.value) - 1; updateFinalPrice(); } }
+        function stepDown() { let q = document.getElementById('qty'); if(q.value > 1) q.value = parseInt(q.value) - 1; updateFinalPrice(); }
         
         function updateFinalPrice() {
             if(unitPrice > 0) {
@@ -210,126 +130,26 @@
             }
         }
 
-        // دالة عرض الصورة بعد اختيارها
-        function previewImage(event) {
-            const input = event.target;
-            const previewContainer = document.getElementById('imagePreviewContainer');
-            const previewImage = document.getElementById('imagePreview');
-            
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewContainer.classList.remove('hidden');
-                }
-                reader.readAsDataURL(input.files[0]);
-            } else {
-                previewContainer.classList.add('hidden');
-            }
-        }
-
-        // دالة النسخ
-        function copyToClipboard(elementId, btnElement, event) {
-            event.stopPropagation();
-            const textToCopy = document.getElementById(elementId).innerText;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                const textSpan = btnElement.querySelector('.btn-text');
-                const originalText = textSpan.innerText;
-                
-                btnElement.classList.replace('border-gray-200', 'border-green-500');
-                btnElement.classList.replace('text-gray-700', 'text-green-600');
-                btnElement.classList.replace('hover:border-orange-500', 'hover:border-green-600');
-                textSpan.innerText = "تم النسخ ✔";
-                
-                setTimeout(() => {
-                    btnElement.classList.replace('border-green-500', 'border-gray-200');
-                    btnElement.classList.replace('text-green-600', 'text-gray-700');
-                    btnElement.classList.replace('hover:border-green-600', 'hover:border-orange-500');
-                    textSpan.innerText = originalText;
-                }, 2000);
-            });
-        }
-
         function goToCheckout() {
-            if(!selectedAmount) { alert("يرجى اختيار الحزمة أولاً."); return; }
+            if(!selectedAmount) { alert("يرجى اختيار الحزمة أولاً"); return; }
             if(!document.getElementById('fName').value || !document.getElementById('email').value || !document.getElementById('billInfo').value) {
-                alert("يرجى ملء جميع البيانات المطلوبة."); return;
+                alert("يرجى ملء البيانات المطلوبة."); return;
             }
-            
             let total = unitPrice * parseInt(document.getElementById('qty').value);
             document.getElementById('res-qty').innerText = selectedAmount + " (x" + document.getElementById('qty').value + ")";
             document.getElementById('res-price').innerText = "$ " + total.toFixed(2);
-            
-            const productPage = document.getElementById('product-page');
-            const checkoutPage = document.getElementById('checkout-page');
-
-            productPage.style.display = 'none';
-            checkoutPage.style.display = 'block';
-
-            checkoutPage.classList.remove('fade-in');
-            void checkoutPage.offsetWidth; 
-            checkoutPage.classList.add('fade-in');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('product-page').style.display = 'none';
+            document.getElementById('checkout-page').style.display = 'block';
+            window.scrollTo(0,0);
         }
 
-        function goBack() { 
-            document.getElementById('checkout-page').style.display = 'none'; 
-            const productPage = document.getElementById('product-page');
-            productPage.style.display = 'grid'; 
-            productPage.classList.remove('fade-in');
-            void productPage.offsetWidth;
-            productPage.classList.add('fade-in');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        function goBack() { document.getElementById('product-page').style.display = 'grid'; document.getElementById('checkout-page').style.display = 'none'; }
 
         async function finishAll() {
             const btn = document.getElementById('finalBtn');
-            const txn = document.getElementById('txnId').value.trim();
-            const fileInput = document.getElementById('proofImage');
-            const file = fileInput.files[0];
-            
-            if(!txn && !file) { 
-                alert("يرجى إدخال رقم المعاملة (TxID) أو إرفاق صورة الإيصال لتأكيد الدفع."); 
-                document.getElementById('txnId').focus();
-                return; 
-            }
-            
-            btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> جاري الإرسال...`;
-            btn.disabled = true;
-
-            let proofImageUrl = null;
-
-            // إذا تم إرفاق صورة، قم برفعها أولاً
-            if (file) {
-                try {
-                    btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> جاري رفع الصورة...`;
-                    
-                    const fileExt = file.name.split('.').pop();
-                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-                    const filePath = `receipts/${fileName}`;
-
-                    const { error: uploadError } = await _supabase.storage
-                        .from('payment_proofs')
-                        .upload(filePath, file);
-
-                    if (uploadError) throw uploadError;
-
-                    const { data: publicUrlData } = _supabase.storage
-                        .from('payment_proofs')
-                        .getPublicUrl(filePath);
-
-                    proofImageUrl = publicUrlData.publicUrl;
-                } catch (err) {
-                    console.error("Upload error:", err);
-                    alert("حدث خطأ أثناء رفع صورة الإيصال. يرجى التأكد من الإعدادات والمحاولة مرة أخرى.");
-                    btn.disabled = false;
-                    btn.innerText = "تأكيد عملية الدفع وإرسال الطلب"; 
-                    return; // إيقاف العملية في حال فشل رفع الصورة
-                }
-            }
-
-            btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> جاري تسجيل الطلب...`;
+            const txn = document.getElementById('txnId').value;
+            if(!txn) { alert("يرجى إدخال Transaction ID"); return; }
+            btn.innerText = "جاري الإرسال..."; btn.disabled = true;
 
             const dataToInsert = {
                 first_name: document.getElementById('fName').value,
@@ -337,25 +157,20 @@
                 email: document.getElementById('email').value,
                 bill_info: document.getElementById('billInfo').value,
                 provider: provider,
-                amount: document.getElementById('res-price').innerText, 
+                amount: document.getElementById('res-price').innerText, // نرسل السعر الإجمالي
                 quantity: document.getElementById('qty').value,
-                transaction_id: txn || "مرفق صورة إيصال", // إذا لم يكتب الكود ولكنه أرسل صورة
-                payment_method: "Binance Pay",
-                proof_url: proofImageUrl // العمود الجديد الخاص برابط الصورة
+                transaction_id: txn,
+                payment_method: "Binance Pay"
             };
 
             try {
                 const { error } = await _supabase.from('orders').insert([dataToInsert]);
                 if (error) throw error;
-                alert("تم استلام طلبك وإثبات الدفع بنجاح! سيتم الشحن لحسابك قريباً.");
+                alert("تم استلام طلبك بنجاح!");
                 location.reload();
             } catch (err) {
-                console.error("Insert error:", err);
-                alert("حدث خطأ في الإرسال. تأكد من اتصالك بالإنترنت.");
-            } finally { 
-                btn.disabled = false;
-                btn.innerText = "تأكيد عملية الدفع وإرسال الطلب"; 
-            }
+                alert("خطأ في الإرسال.");
+            } finally { btn.disabled = false; }
         }
     </script>
 </body>
