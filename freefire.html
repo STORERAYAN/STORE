@@ -130,7 +130,7 @@
                     </div>
                 </div>
 
-                <!-- الدفع والنسخ -->
+                <!-- الدفع والنسخ والإثبات -->
                 <div class="lg:col-span-2 order-1 lg:order-2 space-y-4">
                     <h3 class="font-bold text-lg text-gray-800 mb-2">معلومات الدفع:</h3>
                     
@@ -142,8 +142,7 @@
                             </label>
                         </div>
                         
-                        <!-- صندوق معلومات الدفع والنسخ المطور -->
-                        <div id="binance-info" class="p-5 bg-white border-t border-orange-100">
+                        <div class="p-5 bg-white border-t border-orange-100">
                             <p class="text-gray-600 font-semibold mb-3">يرجى إرسال المبلغ المطلوب إلى مُعرف Binance Pay التالي:</p>
                             
                             <!-- صندوق النسخ -->
@@ -157,11 +156,30 @@
                         </div>
                     </div>
 
-                    <!-- حقل إدخال رقم المعاملة المعزول والبارز -->
+                    <!-- حقل إدخال رقم المعاملة و رفع الصورة المدمج -->
                     <div class="mt-6 bg-gray-50 border-2 border-dashed border-gray-300 p-5 rounded-2xl">
                         <label class="block font-bold text-gray-800 mb-2">تأكيد الدفع (إلزامي):</label>
-                        <p class="text-sm text-gray-500 mb-3">بعد قيامك بإتمام التحويل داخل تطبيق Binance، يرجى لصق رقم المعاملة (TxID) هنا لتأكيد شحن حسابك.</p>
-                        <textarea id="txnId" placeholder="الصق ID المعاملة هنا..." class="w-full border-2 border-gray-200 rounded-xl p-4 h-24 text-left outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all font-mono shadow-inner" dir="ltr"></textarea>
+                        <p class="text-sm text-gray-500 mb-3">بعد قيامك بإتمام التحويل داخل تطبيق Binance، يرجى لصق رقم المعاملة (TxID) هنا.</p>
+                        <textarea id="txnId" placeholder="الصق ID المعاملة هنا..." class="w-full border-2 border-gray-200 rounded-xl p-4 h-24 text-left outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all font-mono shadow-inner mb-4" dir="ltr"></textarea>
+                        
+                        <!-- رفع صورة الإثبات -->
+                        <label class="block font-bold text-gray-800 mb-2 mt-4">إرفاق صورة إيصال التحويل (اختياري/يُسرع العملية):</label>
+                        <div class="flex items-center justify-center w-full">
+                            <label for="proofImage" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-white hover:bg-gray-50 transition-all">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-3 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    </svg>
+                                    <p class="mb-2 text-sm text-gray-500"><span class="font-bold">اضغط لرفع صورة</span> أو قم بسحب الصورة هنا</p>
+                                </div>
+                                <input id="proofImage" type="file" accept="image/*" class="hidden" onchange="previewImage(event)" />
+                            </label>
+                        </div>
+                        <!-- مكان عرض الصورة المصغرة بعد اختيارها -->
+                        <div id="imagePreviewContainer" class="hidden mt-4 text-center">
+                            <p class="text-sm text-green-600 font-bold mb-2">تم اختيار الصورة بنجاح:</p>
+                            <img id="imagePreview" class="max-h-40 rounded-lg mx-auto border-2 border-green-400 shadow-md">
+                        </div>
                     </div>
                     
                     <button id="finalBtn" onclick="finishAll()" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-black py-4 rounded-xl text-xl mt-4 shadow-lg hover:shadow-xl hover:from-orange-600 hover:to-orange-700 transition-all transform active:scale-95">
@@ -173,9 +191,13 @@
     </main>
 
     <script>
+        // إعدادات قاعدة البيانات Supabase
         const SUPABASE_URL = 'https://dxphurkzzkpiyiplpvwj.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_ev1gKdbdyrBmOBTgvcrzGA_kB3-ciNw';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // مفتاح ImgBB لرفع الصور
+        const IMGBB_API_KEY = '122d3113cafb30b701f87c936e8cf127';
 
         let provider = "Free Fire - MENA"; 
         let selectedAmount = "";
@@ -211,7 +233,24 @@
             }
         }
 
-        // دالة النسخ مع التأثير البصري
+        // دالة عرض الصورة بعد اختيارها
+        function previewImage(event) {
+            const input = event.target;
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const previewImage = document.getElementById('imagePreview');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                previewContainer.classList.add('hidden');
+            }
+        }
+
         function copyToClipboard(elementId, btnElement, event) {
             event.stopPropagation();
             const textToCopy = document.getElementById(elementId).innerText;
@@ -220,21 +259,17 @@
                 const textSpan = btnElement.querySelector('.btn-text');
                 const originalText = textSpan.innerText;
                 
-                // تغيير الشكل إلى اللون الأخضر
                 btnElement.classList.replace('border-gray-200', 'border-green-500');
                 btnElement.classList.replace('text-gray-700', 'text-green-600');
                 btnElement.classList.replace('hover:border-orange-500', 'hover:border-green-600');
                 textSpan.innerText = "تم النسخ ✔";
                 
                 setTimeout(() => {
-                    // إعادة الزر لشكله الطبيعي
                     btnElement.classList.replace('border-green-500', 'border-gray-200');
                     btnElement.classList.replace('text-green-600', 'text-gray-700');
                     btnElement.classList.replace('hover:border-green-600', 'hover:border-orange-500');
                     textSpan.innerText = originalText;
                 }, 2000);
-            }).catch(err => {
-                alert('فشل النسخ، يرجى النسخ يدوياً');
             });
         }
 
@@ -254,7 +289,6 @@
             productPage.style.display = 'none';
             checkoutPage.style.display = 'block';
 
-            // إعادة تشغيل حركة الدخول
             checkoutPage.classList.remove('fade-in');
             void checkoutPage.offsetWidth; 
             checkoutPage.classList.add('fade-in');
@@ -276,12 +310,15 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // دالة الإرسال ورفع الصورة المتكاملة
         async function finishAll() {
             const btn = document.getElementById('finalBtn');
             const txn = document.getElementById('txnId').value.trim();
+            const fileInput = document.getElementById('proofImage');
+            const file = fileInput.files[0];
             
-            if(!txn) { 
-                alert("يرجى إدخال رقم المعاملة (TxID) لتأكيد الدفع."); 
+            if(!txn && !file) { 
+                alert("يرجى إدخال رقم المعاملة (TxID) أو إرفاق صورة الإيصال لتأكيد الدفع."); 
                 document.getElementById('txnId').focus();
                 return; 
             }
@@ -289,6 +326,41 @@
             btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> جاري الإرسال...`;
             btn.disabled = true;
 
+            let proofImageUrl = null;
+
+            // 1. رفع الصورة إلى ImgBB إذا تم تحديدها
+            if (file) {
+                try {
+                    btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> جاري رفع الصورة...`;
+                    
+                    const formData = new FormData();
+                    formData.append('image', file);
+
+                    const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        proofImageUrl = result.data.url;
+                    } else {
+                        throw new Error("فشل الرفع إلى ImgBB");
+                    }
+
+                } catch (err) {
+                    console.error("Upload error:", err);
+                    alert("حدث خطأ أثناء رفع صورة الإيصال. يرجى المحاولة مرة أخرى.");
+                    btn.disabled = false;
+                    btn.innerText = "تأكيد عملية الدفع وإرسال الطلب"; 
+                    return; 
+                }
+            }
+
+            btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> جاري تسجيل الطلب...`;
+
+            // 2. إرسال الطلب إلى قاعدة بيانات Supabase
             const dataToInsert = {
                 first_name: document.getElementById('fName').value,
                 last_name: document.getElementById('lName').value,
@@ -297,17 +369,19 @@
                 provider: provider,
                 amount: document.getElementById('res-price').innerText, 
                 quantity: document.getElementById('qty').value,
-                transaction_id: txn,
-                payment_method: "Binance Pay"
+                transaction_id: txn || "مرفق صورة إيصال",
+                payment_method: "Binance Pay",
+                proof_url: proofImageUrl
             };
 
             try {
                 const { error } = await _supabase.from('orders').insert([dataToInsert]);
                 if (error) throw error;
-                alert("تم استلام طلبك بنجاح! سيتم الشحن لحسابك قريباً.");
+                alert("تم استلام طلبك وإثبات الدفع بنجاح! سيتم الشحن لحسابك قريباً.");
                 location.reload();
             } catch (err) {
-                alert("حدث خطأ في الإرسال. تأكد من اتصالك بالإنترنت والمحاولة مرة أخرى.");
+                console.error("Insert error:", err);
+                alert("حدث خطأ في الإرسال إلى قاعدة البيانات. تأكد من اتصالك بالإنترنت.");
             } finally { 
                 btn.disabled = false;
                 btn.innerText = "تأكيد عملية الدفع وإرسال الطلب"; 
