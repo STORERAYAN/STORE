@@ -172,6 +172,22 @@
         </div>
     </main>
 
+    <!-- النافذة المنبثقة الاحترافية -->
+    <div id="custom-alert-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300" dir="rtl">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-[90%] mx-auto shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col items-center text-center border-2 border-transparent" id="custom-alert-box">
+            <!-- الأيقونة -->
+            <div id="alert-icon" class="mb-5"></div>
+            <!-- العنوان -->
+            <h3 id="alert-title" class="text-2xl font-black mb-2"></h3>
+            <!-- نص الرسالة -->
+            <p id="alert-message" class="text-gray-600 mb-8 text-lg font-semibold leading-relaxed"></p>
+            <!-- زر الإغلاق -->
+            <button id="alert-btn" class="w-full text-white font-black py-3 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 active:scale-95 text-lg">
+                حسناً، فهمت
+            </button>
+        </div>
+    </div>
+
     <script>
         const _enc1 = 'aHR0cHM6Ly9keHBodXJrenprcGl5aXBscHZ3ai5zdXBhYmFzZS5jbw==';
         const _enc2 = 'c2JfcHVibGlzaGFibGVfZXYxZ0tkYmR5ckJtT0JUZ3ZjcnpHQV9rQjMtY2lOdw==';
@@ -182,6 +198,46 @@
         let provider = "PUBG Mobile – (MENA)"; 
         let selectedAmount = "";
         let unitPrice = 0;
+
+        // دالة عرض النافذة المنبثقة الاحترافية
+        function showCustomAlert(message, type = 'warning', callback = null) {
+            const modal = document.getElementById('custom-alert-modal');
+            const box = document.getElementById('custom-alert-box');
+            const icon = document.getElementById('alert-icon');
+            const title = document.getElementById('alert-title');
+            const msgEl = document.getElementById('alert-message');
+            const btn = document.getElementById('alert-btn');
+
+            msgEl.innerText = message;
+
+            if (type === 'success') {
+                box.classList.add('border-green-100');
+                title.innerText = 'عملية ناجحة!';
+                title.className = 'text-3xl font-black mb-2 text-green-600';
+                btn.className = 'w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-black py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:from-green-600 hover:to-green-700 transform hover:-translate-y-1 active:scale-95 text-xl';
+                icon.innerHTML = `<div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center"><svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div>`;
+            } else {
+                box.classList.add('border-red-100');
+                title.innerText = 'تنبيه';
+                title.className = 'text-3xl font-black mb-2 text-red-600';
+                btn.className = 'w-full bg-gradient-to-r from-red-500 to-red-600 text-white font-black py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:from-red-600 hover:to-red-700 transform hover:-translate-y-1 active:scale-95 text-xl';
+                icon.innerHTML = `<div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center"><svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>`;
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => box.classList.remove('scale-95'), 10);
+
+            btn.onclick = function() {
+                box.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    box.classList.remove('border-green-100', 'border-red-100');
+                    if (callback) callback();
+                }, 200);
+            };
+        }
 
         function selectPrice(b, p) {
             document.querySelectorAll('.price-btn').forEach(x => x.classList.remove('active'));
@@ -238,13 +294,15 @@
                     btnElement.classList.replace('hover:border-green-600', 'hover:border-orange-500');
                     textSpan.innerText = originalText;
                 }, 2000);
+            }).catch(err => {
+                showCustomAlert('فشل النسخ، يرجى النسخ يدوياً', 'warning');
             });
         }
 
         function goToCheckout() {
-            if(!selectedAmount) { alert("يرجى اختيار الحزمة أولاً."); return; }
+            if(!selectedAmount) { showCustomAlert("يرجى اختيار الحزمة أولاً.", 'warning'); return; }
             if(!document.getElementById('fName').value || !document.getElementById('email').value || !document.getElementById('billInfo').value) {
-                alert("يرجى ملء جميع البيانات المطلوبة."); return;
+                showCustomAlert("يرجى ملء جميع البيانات المطلوبة.", 'warning'); return;
             }
             
             let total = unitPrice * parseInt(document.getElementById('qty').value);
@@ -280,7 +338,7 @@
             const file = fileInput.files[0];
             
             if(!txn && !file) { 
-                alert("يرجى إدخال رقم المعاملة (TxID) أو إرفاق صورة الإيصال لتأكيد الدفع."); 
+                showCustomAlert("يرجى إدخال رقم المعاملة (TxID) أو إرفاق صورة الإيصال لتأكيد الدفع.", 'warning'); 
                 document.getElementById('txnId').focus();
                 return; 
             }
@@ -311,7 +369,7 @@
 
                 } catch (err) {
                     console.error("Upload error:", err);
-                    alert("حدث خطأ أثناء رفع صورة الإيصال. يرجى المحاولة مرة أخرى.");
+                    showCustomAlert("حدث خطأ أثناء رفع صورة الإيصال. يرجى المحاولة مرة أخرى.", 'warning');
                     btn.disabled = false;
                     btn.innerText = "تأكيد عملية الدفع وإرسال الطلب"; 
                     return; 
@@ -336,11 +394,15 @@
             try {
                 const { error } = await _appCore.from('orders').insert([dataToInsert]);
                 if (error) throw error;
-                alert("تم استلام طلبك وإثبات الدفع بنجاح! سيتم الشحن لحسابك قريباً.");
-                location.reload();
+                
+                // رسالة النجاح الاحترافية وإعادة التحميل بعد الضغط
+                showCustomAlert("تم استلام طلبك وإثبات الدفع بنجاح! سيتم الشحن لحسابك قريباً.", 'success', function() {
+                    location.reload();
+                });
+
             } catch (err) {
                 console.error("Insert error:", err);
-                alert("حدث خطأ في الإرسال إلى قاعدة البيانات. تأكد من اتصالك بالإنترنت.");
+                showCustomAlert("حدث خطأ في الإرسال إلى قاعدة البيانات. تأكد من اتصالك بالإنترنت.", 'warning');
             } finally { 
                 btn.disabled = false;
                 btn.innerText = "تأكيد عملية الدفع وإرسال الطلب"; 
